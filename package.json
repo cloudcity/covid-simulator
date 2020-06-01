@@ -7,7 +7,9 @@
     "lint": "prettier --check 'src/**/*.js'"
   },
   "dependencies": {
-    "canvas-confetti": "^1.2.0"
+    "buffer": "^5.6.0",
+    "ndarray": "^1.0.19",
+    "odex": "^2.0.4"
   },
   "devDependencies": {
     "prettier": "^2.0.0",
