@@ -1,16 +1,7 @@
 import dup from "./dup"
-import cwise from "cwise"
+import compiler from "./compiler"
 
-var do_unpack = cwise({
-  args: ["array", "scalar", "index"],
-  body: function unpackCwise(arr, a, idx) {
-    var v = a, i
-    for(i=0;i<idx.length-1;++i) {
-      v=v[idx[i]]
-    }
-    v[idx[idx.length-1]]=arr
-  }
-})
+var do_unpack = compiler({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\n    var _inline_4_v = _inline_4_arg1_, _inline_4_i;\n    for (_inline_4_i = 0; _inline_4_i < _inline_4_arg2_.length - 1; ++_inline_4_i) {\n      _inline_4_v = _inline_4_v[_inline_4_arg2_[_inline_4_i]];\n    }\n    _inline_4_v[_inline_4_arg2_[_inline_4_arg2_.length - 1]] = _inline_4_arg0_;\n  }","args":[{"name":"_inline_4_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_4_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_4_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_4_i","_inline_4_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"unpackCwise","blockSize":64})
 
 function unpack(arr) {
   var result = dup(arr.shape)
