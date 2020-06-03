@@ -7,7 +7,9 @@
     "lint": "prettier --check 'src/**/*.js'"
   },
   "dependencies": {
+    "@babel/core": "^7.10.2",
     "@snowpack/plugin-svelte": "^1.0.6",
+    "@snowpack/plugin-webpack": "^1.1.0",
     "buffer": "^5.6.0",
     "chart.js": "^2.9.3",
     "dup": "^1.0.0",
