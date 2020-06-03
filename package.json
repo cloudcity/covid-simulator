@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "prettier": "^2.0.0",
-    "snowpack": "^2.0.0"
+    "snowpack": "^2.2.2"
   }
 }
