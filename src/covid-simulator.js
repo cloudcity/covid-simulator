@@ -56,8 +56,9 @@ const capitalize = ws => ws.split(' ').map(w => w[0].toUpperCase()+ w.substring(
 class CovidSimulator {
   constructor(e) {
     this.element = e
-    this.name = capitalize(e.dataset.compartment)
+    this.name = "Infected"
     this.graphType = e.dataset.covidGraph
+    this.region = capitalize(e.dataset.region)
 
     let i = COMPARTMENTS.indexOf(this.name)
     this.modelData = generateModelData()
@@ -130,7 +131,7 @@ class CovidSimulator {
         "y": {
           "type": "quantitative",
           "axis": {
-            "title": `Number ${name}`,
+            "title": `Number ${name.toLowerCase()}`,
             "titleFont": "Karla",
             "titleColor": "red",
           },

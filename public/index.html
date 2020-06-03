@@ -5,7 +5,7 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="/index.css" />
-    <title>Covid Simulator Example</title>
+    <title>Covid Simulator</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -18,7 +18,7 @@
       In the simplest version of the model, an intervention is applied evenly across age cohorts. As in a standard SEIR model, a strong intervention early in the pandemic can be seen to 'flatten the curve.' The pandemic resurges when the intervention is lifted.
     </p>
 
-    <div data-covid-graph="simple" data-compartment="infected"></div>
+    <div data-covid-graph="simple" data-region="americas"></div>
 
     <h2>
       Stacking NPIs: An illustration.
@@ -31,6 +31,6 @@
       The input model parameters come with a high degree of uncertainty, and model outputs are unstable with respect to variations in these parameters. Outputs should therefore be understood to illustrate the pattern of the infection — its surge and resurgence — rather than to provide reliable quantitative projections. A number of expected deaths is tallied at the end to demonstrate the impact of prolonged, high infection rates rather than momentary spikes. It is, in effect, a way to understand the area under the curve without additional lines on the chart.
     </p>
 
-    <div data-covid-graph="stacked" data-compartment="dead"></div>
+    <div data-covid-graph="stacked" data-region="africa"></div>
   </body>
 </html>
