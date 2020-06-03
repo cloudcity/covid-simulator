@@ -11,18 +11,18 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/_dist_/index.js"></script>
 
-    <h3>
+    <h2>
       An illustration of Flattening the Curve
-    </h3>
+    </h2>
     <p>
       In the simplest version of the model, an intervention is applied evenly across age cohorts. As in a standard SEIR model, a strong intervention early in the pandemic can be seen to 'flatten the curve.' The pandemic resurges when the intervention is lifted.
     </p>
 
-    <div data-covid-graph="simple"></div>
+    <div data-covid-graph="simple" data-compartment="infected"></div>
 
-    <h3>
+    <h2>
       Stacking NPIs: An illustration.
-    </h3>
+    </h2>
     <p>
       It is challenging to distinguish the effect of individual public health and social measures (PHSMs) on the rate of COVID-19 transmission within a population. Effectiveness depends on how fully communities adopt and adhere to PHSMs, additional interventions they are combined with, and other variables like family size and level of intergenerational contact within a community. Still, evidence does show that PHSMs are more effective when implemented in combination, or “stacked,” than when implemented individually. The following scenario illustrates this concept, when the PHSMs are tied to well-defined partitions of the general population.
     </p>
@@ -31,6 +31,6 @@
       The input model parameters come with a high degree of uncertainty, and model outputs are unstable with respect to variations in these parameters. Outputs should therefore be understood to illustrate the pattern of the infection — its surge and resurgence — rather than to provide reliable quantitative projections. A number of expected deaths is tallied at the end to demonstrate the impact of prolonged, high infection rates rather than momentary spikes. It is, in effect, a way to understand the area under the curve without additional lines on the chart.
     </p>
 
-    <div data-covid-graph="stacked"></div>
+    <div data-covid-graph="stacked" data-compartment="dead"></div>
   </body>
 </html>

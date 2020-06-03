@@ -1,3 +1,9 @@
 body {
-  font-family: Avenir, "Proxima Nova", Helvetica, sans-serif;
+  font-family: Karla, sans-serif;
+  color: #4A495B;
+  margin: 5% 20%;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: "DM Serif Display", serif;
 }
