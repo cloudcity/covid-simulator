@@ -1,7 +1,22 @@
-import CovidSimulator from "./covid-simulator.js"
+import CovidSimulator from "./CovidSimulator.svelte"
 
-document.addEventListener("DOMContentLoaded", () => {
+let apps = [];
+
+function createApps(cs) {
   document.querySelectorAll("[data-covid-graph]").forEach(e => {
-    new CovidSimulator(e)
+    apps.push(new cs({target: e, props: e.dataset}))
   })
-})
+}
+
+document.addEventListener("DOMContentLoaded", () => createApps(CovidSimulator))
+
+export default apps
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({module}) => {
+    createApps(module)
+  });
+  import.meta.hot.dispose(() => {
+    apps.forEach(a => a.$destroy())
+  });
+}
