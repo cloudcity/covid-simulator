@@ -1,5 +1,6 @@
-import odex from 'odex';
-import np from './num';
+import odex from "odex"
+import np from "./num"
+import unzip from "./unzip"
 
 // Code to build and solve an age-structured SEIR epidemiological model.
 
@@ -108,7 +109,6 @@ let NPI_IMPACTS = {
 // External methods:
 //     f: Function giving the rate of change in the state variable y(t).
 //     solve: Integrate the coupled differential equations.
-//     solve_to_dataframe: Solve and output a tidy dataframe.
 class SEIRModel {
   constructor(
     contact_matrices,
@@ -234,7 +234,7 @@ SEIRModel.prototype.solve = function (y0) {
       },
     ),
   );
-  return [t, y.flat()];
+  return [t, y.flat()]
 };
 
 const zip = (arr, ...arrs) => {
@@ -316,14 +316,37 @@ let _colsum = (a) =>
     return zip(...a).map((i) => i.reduce((a, b) => a + b));
   });
 
-SEIRModel.prototype.solve_to_dataframe = function (
-  y0,
-  defaulted_output = false,
-) {
-  let [t, y] = this.solve(y0);
-  y = np.array(y, [t.length, this.N_cohorts, this.N_compartments]);
-  let aggregate_nums = _colsum(y);
-  return aggregate_nums;
-};
+SEIRModel.generateData = function(region, interventions) {
+  let TOTAL_POPULATION = 1000000
+  let START_DAY = 0
+  let END_DAY = 300
+  let initial_infected = (0.1 * 0.01)
+
+  let population = np.unpack(WORLD_POP[region]).map(e => e * TOTAL_POPULATION)
+  let pop_0 = population.map(f => [
+      f * (1 - 2 * initial_infected),
+      f * initial_infected,
+      f * initial_infected,
+      0, 0, 0,
+  ])
+
+  let [contact_matrices, epoch_end_times] = SEIRModel.model_input(
+    CONTACT_MATRICES_0[region],
+    Object.values(interventions),
+    Object.keys(interventions),
+    END_DAY-START_DAY
+  )
+
+  let model = new SEIRModel(contact_matrices, epoch_end_times)
+  let [t, y] = model.solve(pop_0.flat())
+  let results = np.array(y, [t.length, model.N_cohorts, model.N_compartments]);
+  let aggregates = unzip(_colsum(results))
+
+  let data = {}
+  COMPARTMENTS.forEach((c,i) => data[c] = aggregates[i])
+  data["cohortDeaths"] = np.unpack(results.pick(300, null, 5))
+
+  return data
+}
 
 export default SEIRModel;
