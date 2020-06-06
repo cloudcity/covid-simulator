@@ -10,6 +10,20 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/_dist_/index.js"></script>
+    <script>
+      function updateRegion() {
+        let region = document.querySelector("select").value.toLowerCase()
+        document.querySelectorAll("[data-covid-graph]").forEach(e => e.dataset.region = region)
+      }
+    </script>
+    <h3>Choose a region to change graphs:
+      <select onchange="updateRegion()">
+        <option>Africa</option>
+        <option>Americas</option>
+        <option>Asia</option>
+        <option>Europe</option>
+      </select>
+    </h3>
 
     <h2>
       An illustration of Flattening the Curve
@@ -18,7 +32,7 @@
       In the simplest version of the model, an intervention is applied evenly across age cohorts. As in a standard SEIR model, a strong intervention early in the pandemic can be seen to 'flatten the curve.' The pandemic resurges when the intervention is lifted.
     </p>
 
-    <div data-covid-graph="simple" data-region="americas"></div>
+    <div data-covid-graph="simple" data-region="africa"></div>
 
     <h2>
       Stacking NPIs: An illustration.
