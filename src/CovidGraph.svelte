@@ -6,7 +6,6 @@
   import { onMount } from "svelte"
   import { writable } from "svelte/store"
   import vegaEmbed from "vega-embed"
-  import _ from "lodash"
 
   import model from "./model"
 
@@ -19,7 +18,7 @@
   $: modelData = model.generateData(region, interventions)
   $: seriesData = modelData[compartment].map((v,d) => ({days: d, pop: Math.round(v)}))
   $: deathCounts = modelData["cohortDeaths"].map(Math.round).map(n => n.toLocaleString())
-  $: deathsTotal = Math.round(_.sum(modelData["cohortDeaths"])).toLocaleString()
+  $: deathsTotal = Math.round(modelData["cohortDeaths"].reduce((t,n) => t+n)).toLocaleString()
   $: vegaSpec = spec(compartment)
   $: {
     if (vegaElement && vegaSpec) {
@@ -35,6 +34,11 @@
       "Dead": "deaths",
     }[compartment]
 
+    let yHeight = {
+      "Infected": 100000,
+      "Dead": 8000,
+    }[compartment]
+
     return {
       "config": {
         "view": {
@@ -43,22 +47,24 @@
         },
         "axis": {
           "titleFont": "Karla",
+          "titleFontSize": 13,
           "labelFont": "Karla",
+          "labelFontSize": 13,
         },
       },
       "title": {
-        "text": compartment,
-        "subtitle": `Number of daily COVID-19 ${subtitleName} in the region`,
+        "text": `Number of daily COVID-19 ${subtitleName} in the region`,
         "anchor": "start",
         "font": "Karla",
-        "subtitleFont": "Karla",
+        "fontWeight": "normal",
       },
       "data": {
         "name": "seriesData"
       },
       "mark": {
         "type": "line",
-        "strokeWidth": 3,
+        "clip": true,
+        "strokeWidth": 4,
         "color": {
           "x1": 1,
           "y1": 1,
@@ -82,7 +88,7 @@
           "type": "quantitative",
           "axis": {
             "title": "Days since first infection",
-            "titleFontSize": 12,
+            "titleFontSize": 13,
           },
           "field": "days",
           "scale": {
@@ -96,7 +102,7 @@
           },
           "field": "pop",
           "scale": {
-            "domain": [ 0, 100000 ]
+            "domain": [ 0, yHeight ]
           }
         }
       },
@@ -140,14 +146,14 @@
   .numbers p {
     padding: 0.5rem 1.5rem;
     text-align: center;
-    font-size: 10pt;
+    font-size: 13px;
     color: #807F8B;
     flex-grow: 1;
   }
 
   .numbers p .big {
     display: block;
-    font-size: 12pt;
+    font-size: 20px;
     color: #4A495B;
   }
 
@@ -159,7 +165,7 @@
 <div class="covid-graph-container">
   <div class="covid-graph-vega" bind:this={vegaElement}></div>
   <section class="numbers">
-    <p><span class="big">Deaths</span> per million</p>
+    <p><span class="big">Final deaths</span> per million per day</p>
     <p>&lt; 19 years old<span class="big">{deathCounts[0]}</span></p>
     <p>20 - 59 years old<span class="big">{deathCounts[1]}</span></p>
     <p>60+ years old<span class="big">{deathCounts[2]}</span></p>

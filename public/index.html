@@ -19,20 +19,24 @@
     <h3>Choose a region to change graphs:
       <select onchange="updateRegion()">
         <option>Africa</option>
-        <option>Americas</option>
+        <option selected>Americas</option>
         <option>Asia</option>
         <option>Europe</option>
       </select>
     </h3>
 
-    <h2>
-      An illustration of Flattening the Curve
-    </h2>
-    <p>
-      In the simplest version of the model, an intervention is applied evenly across age cohorts. As in a standard SEIR model, a strong intervention early in the pandemic can be seen to 'flatten the curve.' The pandemic resurges when the intervention is lifted.
-    </p>
+    <h2>1.	Act swiftly and decisively by implementing PHSMs</h2>
 
-    <div data-covid-graph="simple" data-region="africa"></div>
+    <p>
+      Experience shows that if PHSMs are implemented early and decisively, they can drastically reduce the severity of an epidemic by limiting shortages of hospital beds and other supplies, and ultimately saving lives.1,2 During the 1918 influenza pandemic, U.S. cities that implemented PHSMs early and thoroughly were able to “flatten the curve,” reducing the peak of their epidemics by up to 50%.2,3  Recent studies have shown that PHSMs implemented in Wuhan, China had significant impact.4 Had they been implemented one week, two weeks, or three weeks earlier, they would have further reduced the number of cases by 66%, 86% and 95%.
+    </p>
+    <h3>
+      Use the slider to change the start date of PHSM implementation in relation to the date of the first confirmed case.
+    </h3>
+    <p>
+      Early implementation results in a flattening of the curve, whereas later implementation results in a high peak of transmission that can overwhelm health systems.
+    </p>
+    <div data-covid-graph="simple" data-region="americas"></div>
 
     <h2>
       Stacking NPIs: An illustration.
@@ -45,6 +49,6 @@
       The input model parameters come with a high degree of uncertainty, and model outputs are unstable with respect to variations in these parameters. Outputs should therefore be understood to illustrate the pattern of the infection — its surge and resurgence — rather than to provide reliable quantitative projections. A number of expected deaths is tallied at the end to demonstrate the impact of prolonged, high infection rates rather than momentary spikes. It is, in effect, a way to understand the area under the curve without additional lines on the chart.
     </p>
 
-    <div data-covid-graph="stacked" data-region="africa"></div>
+    <div data-covid-graph="stacked" data-region="americas"></div>
   </body>
 </html>
