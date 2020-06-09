@@ -108,7 +108,7 @@
       },
       "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json",
       "width": "container",
-      "height": 260,
+      "height": 300,
       "autosize": {
         "type": "fit",
         "contains": "padding"

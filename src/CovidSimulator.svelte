@@ -74,8 +74,17 @@
     font-weight: bold;
   }
 
-  .simple .control-label {
+  .control-note {
+    font-size: 13px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+  }
+
+  .control-label {
     display: inline-block;
+  }
+
+  .simple .control-label {
     margin-top: 25px;
     width: 10%;
     text-align: center;
@@ -90,48 +99,66 @@
 
   .stacked {
     display: flex;
-    outline: 1px solid red;
   }
 
   .stacked .compartments {
-    flex: 70%;
+    width: 70%;
   }
 
   .stacked .controls {
-    flex: 30%;
+    width: 30%;
     order: -1;
     display: flex;
     flex-flow: column nowrap;
+    justify-content: center;
   }
 
   .stacked .control {
-    padding: 1rem 0;
+    padding: 20px;
+  }
+
+  .stacked .control-name {
+    margin-bottom: 10px;
   }
 
   .stacked .control-label {
-    width: 100%;
+    margin-top: 17px;
   }
 
-  .radio-container {
+  .stacked .slider-container {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    width: 88%;
+  }
+
+  .radio {
     display: inline-block;
     position: relative;
-    padding: 0 6px;
-    margin: 10px 0 0;
+    padding: 0;
+    margin: 0;
   }
 
-  .radio-container input[type='radio'] {
+  .radio .control-label {
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+
+  .radio input[type='radio'] {
     display: none;
   }
 
-  .radio-container label {
+  .radio label {
+    display: block;
+    color: #807F8B;
   }
 
-  .radio-container label:before {
+  .radio label:before {
     content: " ";
     display: inline-block;
     position: relative;
     top: 2px;
-    margin: 0 3px 0 0;
+    margin: 0 7px 0 0;
     width: 12px;
     height: 12px;
     border-radius: 10px;
@@ -139,13 +166,13 @@
     background-color: transparent;
   }
 
-  .radio-container input[type=radio]:checked + label:after {
+  .radio input[type=radio]:checked + label:after {
     border-radius: 11px;
     width: 8px;
     height: 8px;
     position: absolute;
     top: 5px;
-    left: 9px;
+    left: 3px;
     content: " ";
     display: block;
     background: #D35C08;
@@ -166,63 +193,68 @@
 
   <section class="controls">
     {#if stacked}
-    <section class="control">
-      <div class="control-name">Contact quarantine strategy</div>
-      <div class="control-group">
-        <div class="radio-container">
+      <section class="control control-radio">
+        <div class="control-name">Contact quarantine strategy</div>
+        <div class="control-group radio">
           <input type="radio" id="strategy-quarantine" name="strategy" value="quarantine" checked>
           <label class="control-label" for="strategy-quarantine">Household quarantine</label>
         </div>
-        <div class="radio-container">
+        <div class="control-group radio">
           <input type="radio" id="strategy-tracing" name="strategy" value="tracing">
           <label class="control-label" for="strategy-tracing">Extended contact tracing</label>
         </div>
-      </div>
-      <div class="control-group">
-        <span class="control-label">Day</span>
-        <div class="slider-container">
-          <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+        <div class="control-group slider">
+          <span class="control-label">Day</span>
+          <div class="slider-container">
+            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     {/if}
+
     <section class="control control-highlight">
       <div class="control-name">Shelter in place</div>
-      <div class="control-group">
+      {#if stacked}
+        <div class="control-note">This overrides all interventions below</div>
+      {/if}
+      <div class="control-group slider">
         <span class="control-label">Day</span>
         <div class="slider-container">
           <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
         </div>
       </div>
     </section>
+
     {#if stacked}
-    <section class="control">
-      <div class="control-name">Schools closed</div>
-      <div class="control-group">
-        <span class="control-label">Day</span>
-        <div class="slider-container">
-          <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+      <section class="control">
+        <div class="control-name">Schools closed</div>
+        <div class="control-group slider">
+          <span class="control-label">Day</span>
+          <div class="slider-container">
+            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+          </div>
         </div>
-      </div>
-    </section>
-    <section class="control">
-      <div class="control-name">Mass gatherings cancelled</div>
-      <div class="control-group">
-        <span class="control-label">Day</span>
-        <div class="slider-container">
-          <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+      </section>
+
+      <section class="control slider">
+        <div class="control-name">Mass gatherings cancelled</div>
+        <div class="control-group slider">
+          <span class="control-label">Day</span>
+          <div class="slider-container">
+            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+          </div>
         </div>
-      </div>
-    </section>
-    <section class="control">
-      <div class="control-name">Shielding the elderly</div>
-      <div class="control-group">
-        <span class="control-label">Day</span>
-        <div class="slider-container">
-          <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+      </section>
+
+      <section class="control">
+        <div class="control-name">Shielding the elderly</div>
+        <div class="control-group slider">
+          <span class="control-label">Day</span>
+          <div class="slider-container">
+            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     {/if}      
   </section>
 </section>
