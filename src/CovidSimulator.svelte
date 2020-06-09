@@ -229,7 +229,7 @@
   <section class="controls">
     {#if stacked}
       <section class="control control-radio">
-        <div class="control-name">Contact quarantine strategy</div>
+        <div class="control-name">Quarantine contacts on days</div>
         <div class="control-group radio">
           <input type="radio" id="strategy-quarantine" bind:group={tracing} value={false}>
           <label class="control-label" for="strategy-quarantine">Household quarantine</label>
@@ -247,7 +247,7 @@
     {/if}
 
     <section class="control control-highlight">
-      <div class="control-name">Shelter in place</div>
+      <div class="control-name">Shelter in place {#if stacked}on days{/if}</div>
       {#if stacked}
         <div class="control-note">This overrides all interventions below</div>
       {/if}
@@ -261,7 +261,7 @@
 
     {#if stacked}
       <section class="control">
-        <div class="control-name">Schools closed</div>
+        <div class="control-name">Schools closed on days</div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={schools}></RangeSlider>
@@ -270,7 +270,7 @@
       </section>
 
       <section class="control">
-        <div class="control-name">Mass gatherings cancelled</div>
+        <div class="control-name">Cancel mass gatherings on days</div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={gathers}></RangeSlider>
@@ -279,7 +279,7 @@
       </section>
 
       <section class="control">
-        <div class="control-name">Shielding the elderly</div>
+        <div class="control-name">Shield the elderly on days</div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={elderly}></RangeSlider>
