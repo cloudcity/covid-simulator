@@ -1,6 +1,7 @@
 <script>
   export let covidGraph
   export let region
+  export let preset
 
   import wNumb from "wnumb"
   import RangeSlider from "./RangeSlider"
@@ -9,30 +10,37 @@
   $: region = region[0].toUpperCase() + region.slice(1)
   let stacked = (covidGraph === "stacked")
   let simple = !stacked
+  let endDate = 300
 
   let compartment = "Infected"
   let tooltip = wNumb({decimals: 0, thousand: ","})
 
-  let quarantine, ranges, tracing
-  let interventions = {}
+  let tracing = false
+  let shelter, gathers, schools, elderly, quarantine
 
-  if (simple) {
-    ranges = {"Shelter in place": [30, 160]}
-  } else {
-    ranges = {
-      "Cancel mass gatherings": [30, 80],
-      "School closure": [30, 70],
-      "Shelter in place": [20, 20],
-      "Shielding the elderly": [30, 100],
-    }
-    quarantine = [70, 200]
-    tracing = false
+  switch (preset) {
+    default:
+      shelter = simple ? [30, 160] : [20, 20]
+      gathers = [30, 80]
+      schools = [30, 70]
+      elderly = [30, 100]
+      quarantine = [70, 180]
   }
 
+  let interventions = {}
+
   $: {
-    interventions = {}
-    Object.keys(ranges).forEach(key => interventions[key] = ranges[key])
-    if (stacked) interventions[tracing ? "Quarantine and tracing" : "Quarantine"] = quarantine
+    if (simple) {
+      interventions = { "Shelter in place": shelter }
+    } else {
+      interventions = {
+        "Cancel mass gatherings": gathers,
+        "School closure": schools,
+        "Shelter in place": shelter,
+        "Shielding the elderly": elderly
+      }
+      interventions[tracing ? "Quarantine and tracing" : "Quarantine"] = quarantine
+    }
   }
 </script>
 
@@ -232,7 +240,7 @@
         </div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={quarantine}></RangeSlider>
+            <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={quarantine}></RangeSlider>
           </div>
         </div>
       </section>
@@ -246,7 +254,7 @@
       <div class="control-group slider">
         {#if simple}<span class="control-label">Day</span>{/if}
         <div class="slider-container">
-          <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shelter in place"]}></RangeSlider>
+          <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={shelter}></RangeSlider>
         </div>
       </div>
     </section>
@@ -256,7 +264,7 @@
         <div class="control-name">Schools closed</div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["School closure"]}></RangeSlider>
+            <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={schools}></RangeSlider>
           </div>
         </div>
       </section>
@@ -265,7 +273,7 @@
         <div class="control-name">Mass gatherings cancelled</div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Cancel mass gatherings"]}></RangeSlider>
+            <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={gathers}></RangeSlider>
           </div>
         </div>
       </section>
@@ -274,7 +282,7 @@
         <div class="control-name">Shielding the elderly</div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shielding the elderly"]}></RangeSlider>
+            <RangeSlider max={endDate} step={1} tooltip={tooltip} bind:values={elderly}></RangeSlider>
           </div>
         </div>
       </section>
