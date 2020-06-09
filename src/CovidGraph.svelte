@@ -94,6 +94,7 @@
           "axis": {
             "title": "Days since first infection",
             "titleFontSize": 13,
+            "labelFlush": false,
           },
           "field": "days",
           "scale": {
