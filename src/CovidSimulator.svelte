@@ -37,6 +37,10 @@
 </script>
 
 <style>
+  div, label, button, input {
+    line-height: 1rem;
+  }
+
   .title {
     margin-bottom: 0;
     font-size: 40px;
@@ -55,11 +59,12 @@
   }
 
   .compartment-tabs button {
+    margin: 0;
+    padding: 8px 0;
+    width: 8rem;
     background-color: transparent;
     border: none;
-    line-height: 1.75rem;
     font-size: 15px;
-    width: 8rem;
     color: #D35C08;
   }
 
