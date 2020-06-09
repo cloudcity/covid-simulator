@@ -117,18 +117,29 @@
 
   .stacked {
     display: flex;
-  }
-
-  .stacked .compartments {
-    width: 70%;
+    flex-flow: column nowrap;
   }
 
   .stacked .controls {
-    width: 30%;
-    order: -1;
+    width: 100%;
     display: flex;
-    flex-flow: column nowrap;
     justify-content: center;
+    flex-flow: column nowrap;
+  }
+
+  @media only screen and (min-width : 768px) {
+    .stacked {
+      flex-flow: row nowrap;
+    }      
+
+    .stacked .compartments {
+      width: 70%;
+    }
+
+    .stacked .controls {
+      width: 30%;
+      order: -1;
+    }
   }
 
   .stacked .control {
@@ -139,15 +150,9 @@
     margin-bottom: 10px;
   }
 
-  .stacked .control-label {
-    margin-top: 17px;
-  }
-
-  .stacked .slider-container {
-    position: absolute;
-    top: 25px;
-    right: 0;
-    width: 88%;
+  .stacked .slider {
+    margin-top: 30px;
+    padding-bottom: 10px;
   }
 
   .radio {
@@ -158,8 +163,7 @@
   }
 
   .radio .control-label {
-    margin-top: 0px;
-    margin-bottom: 10px;
+    margin: 0 10px 10px 0;
   }
 
   .radio input[type='radio'] {
@@ -222,7 +226,6 @@
           <label class="control-label" for="strategy-tracing">Extended contact tracing</label>
         </div>
         <div class="control-group slider">
-          <span class="control-label">Day</span>
           <div class="slider-container">
             <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={quarantine}></RangeSlider>
           </div>
@@ -236,7 +239,7 @@
         <div class="control-note">This overrides all interventions below</div>
       {/if}
       <div class="control-group slider">
-        <span class="control-label">Day</span>
+        {#if simple}<span class="control-label">Day</span>{/if}
         <div class="slider-container">
           <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shelter in place"]}></RangeSlider>
         </div>
@@ -247,17 +250,15 @@
       <section class="control">
         <div class="control-name">Schools closed</div>
         <div class="control-group slider">
-          <span class="control-label">Day</span>
           <div class="slider-container">
             <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["School closure"]}></RangeSlider>
           </div>
         </div>
       </section>
 
-      <section class="control slider">
+      <section class="control">
         <div class="control-name">Mass gatherings cancelled</div>
         <div class="control-group slider">
-          <span class="control-label">Day</span>
           <div class="slider-container">
             <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Cancel mass gatherings"]}></RangeSlider>
           </div>
@@ -267,7 +268,6 @@
       <section class="control">
         <div class="control-name">Shielding the elderly</div>
         <div class="control-group slider">
-          <span class="control-label">Day</span>
           <div class="slider-container">
             <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shielding the elderly"]}></RangeSlider>
           </div>
