@@ -13,13 +13,21 @@
   let deathCounts = []
   let modelData = {}
   let seriesData = []
+  let worstCases = {}
   let vegaSpec = {}
 
   $: modelData = model.generateData(region, interventions)
   $: seriesData = modelData[compartment].map((v,d) => ({days: d, pop: Math.round(v)}))
   $: deathCounts = modelData["cohortDeaths"].map(Math.round).map(n => n.toLocaleString())
   $: deathsTotal = Math.round(modelData["cohortDeaths"].reduce((t,n) => t+n)).toLocaleString()
-  $: vegaSpec = spec(compartment)
+  $: {
+    let modelWorstData = model.generateData(region, {})
+    worstCases = {}
+    for (let key in modelWorstData) {
+      worstCases[key] = modelWorstData[key].reduce((m,n) => m > n ? m : n)
+    }
+  }
+  $: vegaSpec = spec(worstCases, compartment)
   $: {
     if (vegaElement && vegaSpec) {
       vegaEmbed(vegaElement, vegaSpec).
@@ -28,16 +36,13 @@
     }
   }
 
-  function spec(compartment) {
+  function spec(worstCases, compartment) {
     let subtitleName = {
       "Infected": "infections",
       "Dead": "deaths",
     }[compartment]
 
-    let yHeight = {
-      "Infected": 100000,
-      "Dead": 8000,
-    }[compartment]
+    let yHeight = worstCases[compartment]
 
     return {
       "config": {
