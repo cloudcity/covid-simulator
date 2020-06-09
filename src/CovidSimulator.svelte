@@ -8,14 +8,32 @@
 
   $: region = region[0].toUpperCase() + region.slice(1)
   let stacked = (covidGraph === "stacked")
-  let simple = (covidGraph === "simple")
+  let simple = !stacked
 
   let compartment = "Infected"
-  let interventions = {
-    "Shelter in place": [30, 160],
-  }
-  let values = [30, 160]
   let tooltip = wNumb({decimals: 0, thousand: ","})
+
+  let quarantine, ranges, tracing
+  let interventions = {}
+
+  if (simple) {
+    ranges = {"Shelter in place": [30, 160]}
+  } else {
+    ranges = {
+      "Cancel mass gatherings": [30, 80],
+      "School closure": [30, 70],
+      "Shelter in place": [20, 20],
+      "Shielding the elderly": [30, 100],
+    }
+    quarantine = [70, 200]
+    tracing = false
+  }
+
+  $: {
+    interventions = {}
+    Object.keys(ranges).forEach(key => interventions[key] = ranges[key])
+    if (stacked) interventions[tracing ? "Quarantine and tracing" : "Quarantine"] = quarantine
+  }
 </script>
 
 <style>
@@ -185,8 +203,8 @@
     <p class="subtitle">per million population</p>
 
     <nav class="compartment-tabs">
-      <button class:active="{compartment === 'Infected'}" on:click="{() => compartment = 'Infected'}">Infections</button>
-      <button class:active="{compartment === 'Dead'}" on:click="{() => compartment = 'Dead'}">Deaths</button>
+      <button class:active={compartment === 'Infected'} on:click={() => compartment = 'Infected'}>Infections</button>
+      <button class:active={compartment === 'Dead'} on:click={() => compartment = 'Dead'}>Deaths</button>
     </nav>
     <CovidGraph region={region} interventions={interventions} compartment={compartment} />
   </section>
@@ -196,17 +214,17 @@
       <section class="control control-radio">
         <div class="control-name">Contact quarantine strategy</div>
         <div class="control-group radio">
-          <input type="radio" id="strategy-quarantine" name="strategy" value="quarantine" checked>
+          <input type="radio" id="strategy-quarantine" bind:group={tracing} value={false}>
           <label class="control-label" for="strategy-quarantine">Household quarantine</label>
         </div>
         <div class="control-group radio">
-          <input type="radio" id="strategy-tracing" name="strategy" value="tracing">
+          <input type="radio" id="strategy-tracing" bind:group={tracing} value={true}>
           <label class="control-label" for="strategy-tracing">Extended contact tracing</label>
         </div>
         <div class="control-group slider">
           <span class="control-label">Day</span>
           <div class="slider-container">
-            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={quarantine}></RangeSlider>
           </div>
         </div>
       </section>
@@ -220,7 +238,7 @@
       <div class="control-group slider">
         <span class="control-label">Day</span>
         <div class="slider-container">
-          <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+          <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shelter in place"]}></RangeSlider>
         </div>
       </div>
     </section>
@@ -231,7 +249,7 @@
         <div class="control-group slider">
           <span class="control-label">Day</span>
           <div class="slider-container">
-            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["School closure"]}></RangeSlider>
           </div>
         </div>
       </section>
@@ -241,7 +259,7 @@
         <div class="control-group slider">
           <span class="control-label">Day</span>
           <div class="slider-container">
-            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Cancel mass gatherings"]}></RangeSlider>
           </div>
         </div>
       </section>
@@ -251,10 +269,10 @@
         <div class="control-group slider">
           <span class="control-label">Day</span>
           <div class="slider-container">
-            <RangeSlider max="{300}" step="{1}" tooltip="{tooltip}" bind:values="{interventions["Shelter in place"]}"></RangeSlider>
+            <RangeSlider max={300} step={1} tooltip={tooltip} bind:values={ranges["Shielding the elderly"]}></RangeSlider>
           </div>
         </div>
       </section>
-    {/if}      
+    {/if}
   </section>
 </section>
