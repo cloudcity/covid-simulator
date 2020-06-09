@@ -13,7 +13,6 @@
   export let updateWhenSliding = false;
 
   onMount(() => {
-    console.log(tooltip)
     slider = noUiSlider.create(slider, {
       start: values,
       step,
@@ -31,8 +30,7 @@
   });
 
   function onSliderValueSet(_values) {
-    console.log(_values)
-    values = _values;
+    values = _values.map(tooltip.from)
   }
 
   onDestroy(() => {
