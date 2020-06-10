@@ -58,12 +58,6 @@
           "labelFontSize": 13,
         },
       },
-      "title": {
-        "text": `Number of daily COVID-19 ${subtitleName} in the region`,
-        "anchor": "start",
-        "font": "Karla",
-        "fontWeight": "normal",
-      },
       "data": {
         "name": "seriesData"
       },
@@ -93,8 +87,9 @@
         "x": {
           "type": "quantitative",
           "axis": {
-            "title": "Days since first infection",
+            "title": "days since first infection",
             "titleFontSize": 13,
+            "titleFontWeight": "normal",
             "labelFlush": false,
           },
           "field": "days",
@@ -105,7 +100,9 @@
         "y": {
           "type": "quantitative",
           "axis": {
-            "title": null,
+            "title": `daily ${subtitleName} per million`,
+            "titleFontWeight": "normal",
+            "titleFontSize": 13,
           },
           "field": "pop",
           "scale": {

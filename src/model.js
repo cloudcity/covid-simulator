@@ -171,7 +171,7 @@ SEIRModel.prototype.f = function (t, y) {
 
   let contact = this._fetch_contact(t);
   if (!contact) {
-    console.log('oh no: ', [t, np.unpack(this.contacts)]);
+    console.error('oh no: ', [t, np.unpack(this.contacts)]);
   }
   let cohorts_range = Array.from(Array(this.N_cohorts).keys());
   for (let a of cohorts_range) {
