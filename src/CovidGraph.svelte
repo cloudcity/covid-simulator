@@ -2,6 +2,7 @@
   export let compartment
   export let region
   export let interventions
+  export let days
 
   import { onMount } from "svelte"
   import { writable } from "svelte/store"
@@ -16,18 +17,18 @@
   let worstCases = {}
   let vegaSpec = {}
 
-  $: modelData = model.generateData(region, interventions)
+  $: modelData = model.generateData(region, interventions, days)
   $: seriesData = modelData[compartment].map((v,d) => ({days: d, pop: Math.round(v)}))
   $: deathCounts = modelData["cohortDeaths"].map(Math.round).map(n => n.toLocaleString())
   $: deathsTotal = Math.round(modelData["cohortDeaths"].reduce((t,n) => t+n)).toLocaleString()
   $: {
-    let modelWorstData = model.generateData(region, {})
+    let modelWorstData = model.generateData(region, {}, days)
     worstCases = {}
     for (let key in modelWorstData) {
       worstCases[key] = modelWorstData[key].reduce((m,n) => m > n ? m : n)
     }
   }
-  $: vegaSpec = spec(worstCases, compartment)
+  $: vegaSpec = spec(worstCases, compartment, days)
   $: {
     if (vegaElement && vegaSpec) {
       vegaEmbed(vegaElement, vegaSpec).
@@ -98,7 +99,7 @@
           },
           "field": "days",
           "scale": {
-            "domain": [0,300]
+            "domain": [0, days]
           }
         },
         "y": {
@@ -108,7 +109,7 @@
           },
           "field": "pop",
           "scale": {
-            "domain": [ 0, yHeight ]
+            "domain": [0, yHeight]
           }
         }
       },

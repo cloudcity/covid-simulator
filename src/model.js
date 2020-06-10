@@ -316,10 +316,10 @@ let _colsum = (a) =>
     return zip(...a).map((i) => i.reduce((a, b) => a + b));
   });
 
-SEIRModel.generateData = function(region, interventions) {
+SEIRModel.generateData = function(region, interventions, days) {
   let TOTAL_POPULATION = 1000000
   let START_DAY = 0
-  let END_DAY = 300
+  let END_DAY = days
   let initial_infected = (0.1 * 0.01)
 
   let population = np.unpack(WORLD_POP[region]).map(e => e * TOTAL_POPULATION)
@@ -344,7 +344,7 @@ SEIRModel.generateData = function(region, interventions) {
 
   let data = {}
   COMPARTMENTS.forEach((c,i) => data[c] = aggregates[i])
-  data["cohortDeaths"] = np.unpack(results.pick(300, null, 5))
+  data["cohortDeaths"] = np.unpack(results.pick(END_DAY, null, 5))
 
   return data
 }
