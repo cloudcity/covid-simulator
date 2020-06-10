@@ -1,5 +1,4 @@
 <script>
-  export let covidGraph
   export let region
   export let preset = null
 
@@ -8,9 +7,8 @@
   import CovidGraph from "./CovidGraph"
 
   $: region = region[0].toUpperCase() + region.slice(1)
-  let stacked = (covidGraph === "stacked")
-  let simple = !stacked
-  if (preset === null) preset = simple ? 1 : 2 
+  let simple = ["1", "3"].includes(preset)
+  let stacked = !simple
   let days = 180
 
   let compartment = "Infected"
@@ -20,14 +18,14 @@
   let shelter, gathers, schools, elderly, quarantine
 
   switch (preset) {
-    case 1:
+    case "1":
       shelter = [21, 90]
       break
-    case 3:
+    case "3":
       shelter = [21, 60]
       break
-    case 2:
-    case 4:
+    case "2":
+    case "4":
     default:
       quarantine = [90, 180]
       shelter = [21, 90]

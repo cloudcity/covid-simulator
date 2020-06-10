@@ -6,8 +6,11 @@ let observers = []
 const updateProps = function(app) {
   return function(mutationsList, observer) {
     mutationsList.forEach(m => {
-      if (m.type === "attributes" && m.attributeName === "data-region") {
-        app.$set({region: m.target.dataset.region})
+      if (m.type === "attributes") {
+        app.$set({
+          region: m.target.dataset.region,
+          preset: m.target.dataset.preset,
+        })
       }
     })
   }
@@ -15,7 +18,10 @@ const updateProps = function(app) {
 
 function createApps(cs) {
   document.querySelectorAll("[data-covid-graph]").forEach(e => {
-    let app = new cs({target: e, props: e.dataset})
+    let app = new cs({target: e, props: {
+      region: e.dataset.region,
+      preset: e.dataset.preset,
+    }})
     apps.push(app)
 
     let observer = new MutationObserver(updateProps(app))
