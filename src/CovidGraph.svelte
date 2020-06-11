@@ -87,7 +87,7 @@
         "x": {
           "type": "quantitative",
           "axis": {
-            "title": "days since first infection",
+            "title": "Day",
             "titleFontSize": 13,
             "titleFontWeight": "normal",
             "labelFlush": false,
@@ -100,7 +100,7 @@
         "y": {
           "type": "quantitative",
           "axis": {
-            "title": `daily ${subtitleName} per million`,
+            "title": `Daily ${subtitleName} per million`,
             "titleFontWeight": "normal",
             "titleFontSize": 13,
           },
@@ -164,12 +164,22 @@
   .numbers .total {
     background-color: #FFFFFF;
   }
+
+  .footnote {
+    font-size: 12px;
+    margin-top: -10px;
+    z-index: 10;
+    line-height: 1em;
+  }
 </style>
 
 <div class="covid-graph-container">
   <div class="covid-graph-vega" bind:this={vegaElement}></div>
+  <section class="footnote">
+    The simulation begins on day zero with 1,000 people infected, 1,000 people exposed, and 1 million people total.
+  </section>
   <section class="numbers">
-    <p><span class="big">Final deaths</span> per million per day</p>
+    <p><span class="big">Total deaths</span> per million per day</p>
     <p>&lt; 19 years old<span class="big">{deathCounts[0]}</span></p>
     <p>20 - 59 years old<span class="big">{deathCounts[1]}</span></p>
     <p>60+ years old<span class="big">{deathCounts[2]}</span></p>
