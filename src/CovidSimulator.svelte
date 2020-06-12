@@ -150,7 +150,7 @@
   @media only screen and (min-width : 768px) {
     .stacked {
       flex-flow: row nowrap;
-    }      
+    }
 
     .stacked .compartments {
       width: 70%;
@@ -208,7 +208,7 @@
     background-color: transparent;
   }
 
-  .radio input[type=radio]:checked + label:after {
+  label.tracing:after {
     border-radius: 11px;
     width: 8px;
     height: 8px;
@@ -238,12 +238,16 @@
       <section class="control control-radio">
         <div class="control-name">Quarantine contacts on days</div>
         <div class="control-group radio">
-          <input type="radio" id="strategy-quarantine" bind:group={tracing} value={false}>
-          <label class="control-label" for="strategy-quarantine">Household quarantine</label>
+          <label class="control-label" class:tracing={!tracing}>
+            <input type="radio" bind:group={tracing} value={false}>
+            Household quarantine
+          </label>
         </div>
         <div class="control-group radio">
-          <input type="radio" id="strategy-tracing" bind:group={tracing} value={true}>
-          <label class="control-label" for="strategy-tracing">Extended contact tracing</label>
+          <label class="control-label" class:tracing={tracing}>
+            <input type="radio" bind:group={tracing} value={true}>
+            Extended contact tracing
+          </label>
         </div>
         <div class="control-group slider">
           <div class="slider-container">
