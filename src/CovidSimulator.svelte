@@ -26,6 +26,7 @@
       break
     case "2":
     case "4":
+    case "5":
     default:
       quarantine = [90, 180]
       shelter = [21, 90]
