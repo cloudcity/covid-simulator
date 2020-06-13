@@ -7,33 +7,59 @@
   import CovidGraph from "./CovidGraph"
 
   $: region = region[0].toUpperCase() + region.slice(1)
-  let simple = ["1", "3"].includes(preset)
-  let stacked = !simple
   let days = 180
 
   let compartment = "Infected"
   let tooltip = wNumb({decimals: 0, thousand: ","})
 
   let tracing = false
-  let shelter, gathers, schools, elderly, quarantine
+  let simple, shelter, gathers, schools, elderly, quarantine
 
   switch (preset) {
+    case "none":
+      simple = false
+      quarantine = [0,0]
+      shelter = [0,0]
+      schools = [0,0]
+      gathers = [0,0]
+      elderly = [0,0]
+      break
+    case "elderly":
+      simple = false
+      quarantine = [0,0]
+      shelter = [0,0]
+      schools = [0,0]
+      gathers = [0,0]
+      elderly = [0,180]
+      break
+    case "schools":
+      simple = false
+      quarantine = [0,0]
+      shelter = [0,0]
+      schools = [0,180]
+      gathers = [0,0]
+      elderly = [0,0]
+      break
     case "1":
+      simple = true
       shelter = [21, 90]
       break
     case "3":
+      simple = true
       shelter = [21, 60]
       break
     case "2":
     case "4":
     case "5":
     default:
+      simple = false
       quarantine = [90, 180]
       shelter = [21, 90]
       schools = [21, 120]
       gathers = [21, 90]
       elderly = [21, 120]
   }
+  let stacked = !simple
 
   let interventions = {}
 
