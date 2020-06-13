@@ -100,7 +100,7 @@
         "y": {
           "type": "quantitative",
           "axis": {
-            "title": `Daily ${subtitleName} per million`,
+            "title": `${subtitleName[0].toUpperCase()+subtitleName.slice(1)} per million on day`,
             "titleFontWeight": "normal",
             "titleFontSize": 13,
           },
