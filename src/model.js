@@ -298,10 +298,16 @@ SEIRModel.model_input = function (
 
   let epoch_tuples = _partition(day_ranges, total_days);
   let contact_matrices = [];
+  let shelterSubset = ["Cancel mass gatherings", "School closure", "Shielding the elderly"]
 
   for (let epoch of epoch_tuples) {
     let c_eff = np.pack(np.unpack(contact_matrix));
+    let shelterDays = day_ranges[selected_npis.indexOf("Shelter in place")]
     for (let [day_range, npi] of zip(day_ranges, selected_npis)) {
+      let isSubset = shelterSubset.includes(npi)
+      if (isSubset && _intersects(day_range, shelterDays)) {
+        continue
+      }
       if (_intersects(day_range, epoch)) {
         c_eff = _apply(npi, npi_impacts, c_eff);
       }

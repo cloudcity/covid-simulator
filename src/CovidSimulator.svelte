@@ -16,6 +16,22 @@
   let simple, shelter, gathers, schools, elderly, quarantine
 
   switch (preset) {
+    case "shelter-only":
+      simple = false
+      quarantine = [0,0]
+      shelter = [0,60]
+      schools = [0,0]
+      gathers = [0,0]
+      elderly = [0,0]
+      break
+    case "shelter-plus":
+      simple = false
+      quarantine = [0,0]
+      shelter = [0,60]
+      schools = [0,60]
+      gathers = [0,60]
+      elderly = [0,60]
+      break
     case "none":
       simple = false
       quarantine = [0,0]
