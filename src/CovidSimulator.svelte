@@ -202,6 +202,19 @@
     flex-flow: column nowrap;
     font-size: 15px;
     justify-content: center;
+    position: relative;
+  }
+
+  .stacked .explain {
+    position: absolute;
+    background: #FFFFFF;
+    z-index: 10;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    top: 0;
+    height: 100%;
+    padding: 0 15%;
   }
 
   @media only screen and (min-width : 768px) {
@@ -213,7 +226,6 @@
       width: 70%;
     }
 
-    .stacked .explain,
     .stacked .controls {
       width: 30%;
       order: -1;
@@ -298,24 +310,6 @@
     top: 1px;
   }
 
-  .explain {
-    width: 30%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #FFFFFF;
-    z-index: 10;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-  }
-
-  .explain .control-arrow:after {
-    left: 1px;
-    top: -1px;
-  }
-
   .explain .control-name {
     margin-bottom: 20px;
   }
@@ -359,15 +353,15 @@
     <CovidGraph region={region} interventions={interventions} compartment={compartment} days={days} />
   </section>
 
-  {#if explain}
-    <section class="explain" transition:slide>
-      <div class="control-name">{@html explain.name}</div>
-      <div class="control-explanation">{@html explain.body}</div>
-      <button class="explain-back" on:click={showExplanation}>Back</button>
-    </section>
-  {/if}
-
   <section class="controls">
+    {#if explain}
+      <section class="explain" transition:slide>
+        <div class="control-name">{@html explain.name}</div>
+        <div class="control-explanation">{@html explain.body}</div>
+        <button class="explain-back" on:click={showExplanation}>Back</button>
+      </section>
+    {/if}
+
     {#if stacked}
       <section class="control control-radio">
         <div class="control-name">Quarantine contacts on days</div>
