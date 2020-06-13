@@ -286,10 +286,12 @@ SEIRModel.model_input = function (
 
   let _apply = function (npi, npi_impacts, contact_matrix) {
     let impact = npi_impacts[npi] || {};
-    np.mulseq(contact_matrix, impact['chi'] || 1);
+    if (impact['chi']) {
+      np.mulseq(contact_matrix, impact['chi']);
+    }
     for (let [x, y] of impact['indices'] || []) {
       let val = contact_matrix.get(x, y);
-      contact_matrix.set(x, y, val * (impact['xi'] || 1));
+      contact_matrix.set(x, y, (val * impact['xi']));
     }
     return contact_matrix;
   };
