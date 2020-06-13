@@ -2,7 +2,7 @@
   export let region
   export let preset = null
 
-  import { slide } from "svelte/transition"
+  import { fade } from "svelte/transition"
   import wNumb from "wnumb"
   import RangeSlider from "./RangeSlider"
   import CovidGraph from "./CovidGraph"
@@ -355,7 +355,7 @@
 
   <section class="controls">
     {#if explain}
-      <section class="explain" transition:slide>
+      <section class="explain" transition:fade>
         <div class="control-name">{@html explain.name}</div>
         <div class="control-explanation">{@html explain.body}</div>
         <button class="explain-back" on:click={showExplanation}>Back</button>
