@@ -2,6 +2,7 @@
   export let region
   export let preset = null
 
+  import { slide } from "svelte/transition"
   import wNumb from "wnumb"
   import RangeSlider from "./RangeSlider"
   import CovidGraph from "./CovidGraph"
@@ -92,11 +93,30 @@
       interventions[tracing ? "Quarantine and tracing" : "Quarantine"] = quarantine
     }
   }
+
+  let explain = false
+  explain = {
+    name: "Quarantine contacts on days",
+    body: "Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary"
+  }
+  let showExplanation = (e) => {
+    if (explain) { return explain = false }
+
+    let control = e.target.parentElement
+    explain = {
+      name: control.querySelector(".control-name").innerHTML,
+      body: control.querySelector(".control-explanation").innerHTML,
+    }
+  }
 </script>
 
 <style>
   div, label, button, input {
     line-height: 1rem;
+  }
+
+  .covid-simulator {
+    position: relative;
   }
 
   .title {
@@ -135,11 +155,8 @@
 
   button:focus {outline:0;}
 
-  .controls {
-    font-size: 15px;
-  }
-
   .control {
+    position: relative;
     padding: 1.75rem 2.5rem;
   }
 
@@ -186,8 +203,9 @@
   .stacked .controls {
     width: 100%;
     display: flex;
-    justify-content: center;
     flex-flow: column nowrap;
+    font-size: 15px;
+    justify-content: center;
   }
 
   @media only screen and (min-width : 768px) {
@@ -199,6 +217,7 @@
       width: 70%;
     }
 
+    .stacked .explain,
     .stacked .controls {
       width: 30%;
       order: -1;
@@ -262,6 +281,70 @@
     display: block;
     background: #D35C08;
   }
+
+  .control-arrow {
+    width: 10px;
+    height: 10px;
+    background-color: grey;
+    position: absolute;
+    top: 28px;
+    right: 15px;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .control-arrow:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    position: absolute;
+    left: -1px;
+    top: 1px;
+  }
+
+  .explain {
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #FFFFFF;
+    z-index: 10;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+  }
+
+  .explain .control-arrow:after {
+    left: 1px;
+    top: -1px;
+  }
+
+  .explain .control-name {
+    margin-bottom: 20px;
+  }
+
+  .control-explanation {
+    display: none;
+  }
+
+  .explain .control-explanation {
+    display: block;
+    color: #807F8B;
+    font-size: 13px;
+    line-height: 150%;
+  }
+
+  .explain .explain-back {
+    width: auto;
+    margin: 1.5em auto;
+    padding: 1em 1.5em;
+    border-radius: 25px;
+    border: 0;
+    color: #FFFFFF;
+    background-color: #D35C08;
+    font-size: 15px;
+  }
 </style>
 
 <section class="covid-simulator" class:stacked class:simple>
@@ -276,10 +359,22 @@
     <CovidGraph region={region} interventions={interventions} compartment={compartment} days={days} />
   </section>
 
+  {#if explain}
+    <section class="explain" transition:slide>
+      <div class="control-name">{explain.name}</div>
+      <div class="control-explanation">{explain.body}</div>
+      <button class="explain-back" on:click={showExplanation}>Back</button>
+    </section>
+  {/if}
+
   <section class="controls">
     {#if stacked}
       <section class="control control-radio">
         <div class="control-name">Quarantine contacts on days</div>
+        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-explanation">
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+        </div>
         <div class="control-group radio">
           <label class="control-label" class:tracing={!tracing}>
             <input type="radio" bind:group={tracing} value={false}>
@@ -307,15 +402,19 @@
       {/if}
       <div class="control-group slider">
         {#if simple}<span class="control-label">Day</span>{/if}
-        <div class="slider-container">
-          <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={shelter}></RangeSlider>
-        </div>
+          <div class="slider-container">
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={shelter}></RangeSlider>
+          </div>
       </div>
     </section>
 
     {#if stacked}
       <section class="control">
         <div class="control-name">Schools closed on days</div>
+        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-explanation">
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+        </div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={schools}></RangeSlider>
@@ -325,6 +424,10 @@
 
       <section class="control">
         <div class="control-name">No mass gatherings on days</div>
+        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-explanation">
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+        </div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={gathers}></RangeSlider>
@@ -334,6 +437,10 @@
 
       <section class="control">
         <div class="control-name">Shield the elderly on days</div>
+        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-explanation">
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+        </div>
         <div class="control-group slider">
           <div class="slider-container">
             <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={elderly}></RangeSlider>
