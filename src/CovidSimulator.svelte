@@ -95,10 +95,6 @@
   }
 
   let explain = false
-  explain = {
-    name: "Quarantine contacts on days",
-    body: "Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary"
-  }
   let showExplanation = (e) => {
     if (explain) { return explain = false }
 
@@ -335,7 +331,11 @@
     line-height: 150%;
   }
 
-  .explain .explain-back {
+  .explain .control-explanation a {
+    color: #D35C08;
+  }
+
+  .explain button {
     width: auto;
     margin: 1.5em auto;
     padding: 1em 1.5em;
@@ -361,8 +361,8 @@
 
   {#if explain}
     <section class="explain" transition:slide>
-      <div class="control-name">{explain.name}</div>
-      <div class="control-explanation">{explain.body}</div>
+      <div class="control-name">{@html explain.name}</div>
+      <div class="control-explanation">{@html explain.body}</div>
       <button class="explain-back" on:click={showExplanation}>Back</button>
     </section>
   {/if}
@@ -373,7 +373,7 @@
         <div class="control-name">Quarantine contacts on days</div>
         <div class="control-arrow" on:click={showExplanation}></div>
         <div class="control-explanation">
-          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+          Control of COVID-19 requires the effective testing and isolation and quarantine of contacts. Users should determine whether a household quarantine strategy will be adopted (lower resource intensity; we assume 37% reduction in transmission) or an extended contact tracing strategy and quarantine of all extended contacts will be used (higher resource intensity; we assume 52% reduction in transmission. (<a href="https://cmmid.github.io/topics/covid19/reports/bbc_contact_tracing.pdf" target="_blank">Reference</a>)
         </div>
         <div class="control-group radio">
           <label class="control-label" class:tracing={!tracing}>
@@ -413,7 +413,7 @@
         <div class="control-name">Schools closed on days</div>
         <div class="control-arrow" on:click={showExplanation}></div>
         <div class="control-explanation">
-          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary. (<a href="https://www.thelancet.com/action/showPdf?pii=S2352-4642%2820%2930095-X" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
@@ -426,7 +426,7 @@
         <div class="control-name">No mass gatherings on days</div>
         <div class="control-arrow" on:click={showExplanation}></div>
         <div class="control-explanation">
-          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+          Engage with community and religious leaders to articulate value-based decisions and encourage local adoption. Adaptation of existing events, including outdoor services or services in shifts, may be helpful in localities where cancellation of gatherings is not practical. We assumed a reduction in transmission by 28%. (<a href="https://www.pnas.org/content/104/18/7588" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
@@ -439,7 +439,7 @@
         <div class="control-name">Shield the elderly on days</div>
         <div class="control-arrow" on:click={showExplanation}></div>
         <div class="control-explanation">
-          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary.
+          While there is a limited evidence base for a “shielding” strategy, such an approach might be of benefit to certain at-risk groups for severe outcomes. We assumed a reduction in transmission among the elderly cohort and their contacts of 50%. (<a href="https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
@@ -447,6 +447,7 @@
           </div>
         </div>
       </section>
+
     {/if}
   </section>
 </section>
