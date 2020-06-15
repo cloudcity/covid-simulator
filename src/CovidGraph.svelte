@@ -40,9 +40,9 @@
   }
 
   function spec(worstCases, compartment) {
-    let subtitleName = {
-      "Infected": "infections",
-      "Dead": "deaths",
+    let yTitle = {
+      "Infected": "Currently infected per million",
+      "Dead": "Cumulative deaths per million",
     }[compartment]
 
     let yHeight = worstCases[compartment]
@@ -102,7 +102,7 @@
         "y": {
           "type": "quantitative",
           "axis": {
-            "title": `${subtitleName[0].toUpperCase()+subtitleName.slice(1)} per million on day`,
+            "title": yTitle,
             "titleFontWeight": "normal",
             "titleFontSize": 13,
           },
