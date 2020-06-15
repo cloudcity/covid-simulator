@@ -290,7 +290,10 @@ SEIRModel.model_input = function (
       np.mulseq(contact_matrix, impact['chi']);
     }
     for (let [x, y] of impact['indices'] || []) {
-      let val = contact_matrix.get(x, y);
+      x = x < 0 ? contact_matrix.shape[0] + x : x
+      y = y < 0 ? contact_matrix.shape[1] + y : y
+      let val = contact_matrix.get(x, y)
+      if (val === undefined) throw "impact could not be applied"
       contact_matrix.set(x, y, (val * impact['xi']));
     }
     return contact_matrix;
