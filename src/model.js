@@ -352,6 +352,7 @@ SEIRModel.generateData = function(region, interventions, days) {
 
   let data = {}
   COMPARTMENTS.forEach((c,i) => data[c] = aggregates[i])
+  data["Combined Infected"] = data["Infected"].map((v, i) => v + data["Severely Infected"][i])
   data["cohortDeaths"] = np.unpack(results.pick(END_DAY, null, 5))
 
   return data

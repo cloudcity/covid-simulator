@@ -13,12 +13,14 @@
   let vega, vegaElement
   let deathCounts = []
   let modelData = {}
+  let compartmentName
   let seriesData = []
   let worstCases = {}
   let vegaSpec = {}
 
   $: modelData = model.generateData(region, interventions, days)
-  $: seriesData = modelData[compartment].map((v,d) => ({days: d, pop: Math.round(v)}))
+  $: compartmentName = (compartment === "Infected") ? "Combined Infected" : compartment
+  $: seriesData = modelData[compartmentName].map((v,d) => ({days: d, pop: Math.round(v)}))
   $: deathCounts = modelData["cohortDeaths"].map(Math.round).map(n => n.toLocaleString())
   $: deathsTotal = Math.round(modelData["cohortDeaths"].reduce((t,n) => t+n)).toLocaleString()
   $: {
