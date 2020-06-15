@@ -305,7 +305,7 @@ SEIRModel.model_input = function (
     let shelterDays = day_ranges[selected_npis.indexOf("Shelter in place")]
     for (let [day_range, npi] of zip(day_ranges, selected_npis)) {
       let isSubset = shelterSubset.includes(npi)
-      if (isSubset && _intersects(day_range, shelterDays)) {
+      if (isSubset && _intersects(epoch, shelterDays)) {
         continue
       }
       if (_intersects(day_range, epoch)) {
