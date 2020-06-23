@@ -78,19 +78,32 @@
   }
   let stacked = !simple
 
-  let interventions = {}
+  let keys = ["Shelter in place", "Cancel mass gatherings", "School closure", "Shielding the elderly", "Quarantine"]
+  let enabled = keys.slice()
 
+  let qkey = "Quarantine"
+  $: qkey = tracing ? "Quarantine and tracing" : "Quarantine"
+
+  let interventions = {}
   $: {
     if (simple) {
       interventions = { "Shelter in place": shelter }
     } else {
-      interventions = {
-        "Cancel mass gatherings": gathers,
-        "School closure": schools,
-        "Shelter in place": shelter,
-        "Shielding the elderly": elderly
+      interventions = {}
+      for (let key of keys) {
+        switch (key) {
+          case "Cancel mass gatherings":
+            interventions[key] = (enabled.includes(key) ? gathers : [0,0]); break;
+          case "School closure":
+            interventions[key] = (enabled.includes(key) ? schools : [0,0]); break;
+          case "Shelter in place":
+            interventions[key] = (enabled.includes(key) ? shelter : [0,0]); break;
+          case "Shielding the elderly":
+            interventions[key] = (enabled.includes(key) ? elderly : [0,0]); break;
+          case "Quarantine":
+            interventions[qkey] = (enabled.includes(key) ? quarantine : [0,0]); break;
+        }
       }
-      interventions[tracing ? "Quarantine and tracing" : "Quarantine"] = quarantine
     }
   }
 
@@ -100,7 +113,7 @@
 
     let control = e.target.parentElement
     explain = {
-      name: control.querySelector(".control-name").innerHTML,
+      name: control.querySelector(".control-name").innerText,
       body: control.querySelector(".control-explanation").innerHTML,
     }
   }
@@ -168,6 +181,37 @@
     font-weight: bold;
   }
 
+  .control-name input[type='checkbox'] {
+    display: none;
+  }
+
+  .control-name label {
+    position: relative;
+  }
+
+  .control-name label:before {
+    content: " ";
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    margin: 0 3px 0 0;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #D5D5DE;
+    background-color: transparent;
+  }
+
+  .control-name.enabled label:after {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 5px;
+    left: 3px;
+    content: " ";
+    display: block;
+    background: #D35C08;
+  }
+  
   .control-note {
     font-size: 13px;
     margin-top: -5px;
@@ -233,16 +277,15 @@
   }
 
   .stacked .control {
-    padding: 20px;
+    padding: 10px;
   }
 
   .stacked .control-name {
-    margin-bottom: 10px;
+    margin: 0 15px 10px 0;
   }
 
   .stacked .slider {
-    margin-top: 30px;
-    padding-bottom: 10px;
+    margin: 30px 10px 10px;
   }
 
   .radio {
@@ -270,7 +313,7 @@
     display: inline-block;
     position: relative;
     top: 2px;
-    margin: 0 7px 0 0;
+    margin: 0 3px 0 0;
     width: 12px;
     height: 12px;
     border-radius: 10px;
@@ -290,24 +333,17 @@
     background: #D35C08;
   }
 
-  .control-arrow {
-    width: 10px;
-    height: 10px;
-    background-color: grey;
+  .control-tooltip:after {
     position: absolute;
-    top: 28px;
-    right: 15px;
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-
-  .control-arrow:after {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    position: absolute;
-    left: -1px;
-    top: 1px;
+    top: 12px;
+    right: 14px;
+    content: "\24D8";
+    width: 13px;
+    height: 13px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #AAA8B8;
   }
 
   .explain .control-name {
@@ -364,80 +400,105 @@
 
     {#if stacked}
       <section class="control control-radio">
-        <div class="control-name">Quarantine contacts on days</div>
-        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-name" class:enabled={enabled.includes("Quarantine")}>
+          <label class="control-label">
+            <input type="checkbox" bind:group={enabled} value={"Quarantine"}>
+            Quarantine infected on days
+          </label>
+        </div>
+        <div class="control-tooltip" on:click={showExplanation}></div>
         <div class="control-explanation">
           Control of COVID-19 requires the effective testing and isolation and quarantine of contacts. Users should determine whether a household quarantine strategy will be adopted (lower resource intensity; we assume 37% reduction in transmission) or an extended contact tracing strategy and quarantine of all extended contacts will be used (higher resource intensity; we assume 52% reduction in transmission. (<a href="https://cmmid.github.io/topics/covid19/reports/bbc_contact_tracing.pdf" target="_blank">Reference</a>)
         </div>
         <div class="control-group radio">
           <label class="control-label" class:tracing={!tracing}>
             <input type="radio" bind:group={tracing} value={false}>
-            Household quarantine
+            Quarantine household only
           </label>
         </div>
         <div class="control-group radio">
           <label class="control-label" class:tracing={tracing}>
             <input type="radio" bind:group={tracing} value={true}>
-            Extended contact tracing
+            Quarantine all contacts
           </label>
         </div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={quarantine}></RangeSlider>
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={quarantine} disabled={!enabled.includes("Quarantine")}></RangeSlider>
           </div>
         </div>
       </section>
     {/if}
 
-    <section class="control control-highlight">
-      <div class="control-name">Shelter in place {#if stacked}on days{/if}</div>
+    <section class="control">
+      <div class="control-name" class:enabled={enabled.includes("Shelter in place")}>
+        <label class="control-label">
+          <input type="checkbox" bind:group={enabled} value={"Shelter in place"}>
+          Shelter in place {#if stacked}on days{/if}
+        </label>
+      </div>
       {#if stacked}
         <div class="control-note">Overrides interventions below</div>
       {/if}
       <div class="control-group slider">
         {#if simple}<span class="control-label">Day</span>{/if}
           <div class="slider-container">
-            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={shelter}></RangeSlider>
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={shelter} disabled={!enabled.includes("Shelter in place")}></RangeSlider>
           </div>
       </div>
     </section>
 
     {#if stacked}
       <section class="control">
-        <div class="control-name">Schools closed on days</div>
-        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-name" class:enabled={enabled.includes("School closure")}>
+          <label class="control-label">
+            <input type="checkbox" bind:group={enabled} value={"School closure"}>
+            Schools closed on days
+          </label>
+        </div>
+        <div class="control-tooltip" on:click={showExplanation}></div>
         <div class="control-explanation">
           Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary. (<a href="https://www.thelancet.com/action/showPdf?pii=S2352-4642%2820%2930095-X" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={schools}></RangeSlider>
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={schools} disabled={!enabled.includes("School closure")}></RangeSlider>
           </div>
         </div>
       </section>
 
       <section class="control">
-        <div class="control-name">No mass gatherings on days</div>
-        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-name" class:enabled={enabled.includes("Cancel mass gatherings")}>
+          <label class="control-label">
+            <input type="checkbox" bind:group={enabled} value={"Cancel mass gatherings"}>
+            No mass gatherings on days
+          </label>
+        </div>
+        <div class="control-tooltip" on:click={showExplanation}></div>
         <div class="control-explanation">
           Engage with community and religious leaders to articulate value-based decisions and encourage local adoption. Adaptation of existing events, including outdoor services or services in shifts, may be helpful in localities where cancellation of gatherings is not practical. We assumed a reduction in transmission by 28%. (<a href="https://www.pnas.org/content/104/18/7588" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={gathers}></RangeSlider>
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={gathers} disabled={!enabled.includes("Cancel mass gatherings")}></RangeSlider>
           </div>
         </div>
       </section>
 
       <section class="control">
-        <div class="control-name">Shield the elderly on days</div>
-        <div class="control-arrow" on:click={showExplanation}></div>
+        <div class="control-name" class:enabled={enabled.includes("Shielding the elderly")}>
+          <label class="control-label">
+            <input type="checkbox" bind:group={enabled} value={"Shielding the elderly"}>
+            Shield the elderly on days
+          </label>
+        </div>
+        <div class="control-tooltip" on:click={showExplanation}></div>
         <div class="control-explanation">
           While there is a limited evidence base for a “shielding” strategy, such an approach might be of benefit to certain at-risk groups for severe outcomes. We assumed a reduction in transmission among the elderly cohort and their contacts of 50%. (<a href="https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
-            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={elderly}></RangeSlider>
+            <RangeSlider max={days} step={1} tooltip={tooltip} bind:values={elderly} disabled={!enabled.includes("Shielding the elderly")}></RangeSlider>
           </div>
         </div>
       </section>

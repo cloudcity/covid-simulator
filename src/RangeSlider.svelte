@@ -4,6 +4,7 @@
   import wNumb from "wnumb"
 
   let slider = undefined;
+  let element = undefined;
   export let tooltip = false;
   export let min = 0;
   export let max = 100;
@@ -11,9 +12,10 @@
   export let values = [0];
   export let step = null;
   export let updateWhenSliding = false;
+  export let disabled = false;
 
   onMount(() => {
-    slider = noUiSlider.create(slider, {
+    slider = noUiSlider.create(element, {
       start: values,
       step,
       margin,
@@ -22,6 +24,7 @@
       range: { min, max },
       tooltips: values.length === 1 ? [tooltip] : [tooltip, tooltip]
     });
+    if (disabled) element.setAttribute('disabled', true)
 
     slider.on('set', onSliderValueSet)
     slider.on('slide', (values) => {
@@ -31,6 +34,16 @@
 
   function onSliderValueSet(_values) {
     values = _values.map(tooltip.from)
+  }
+
+  $: {
+    if (element) {
+      if (disabled) {
+        element.setAttribute('disabled', true)
+      } else {
+        element.removeAttribute('disabled')
+      }
+    }
   }
 
   onDestroy(() => {
@@ -144,6 +157,9 @@
 :global(.noUi-connect) {
   background: #F79636;
 }
+:global(.noUi-target[disabled] .noUi-connect) {
+  background: #D5D5DE;
+}
 /* Handles and cursors;
  */
 :global(.noUi-draggable) {
@@ -154,6 +170,9 @@
   background: #D35C08;
   cursor: default;
   outline: 0;
+}
+:global(.noUi-target[disabled] .noUi-handle) {
+  background: #D5D5DE;
 }
 :global(.noUi-active) {
   background: #F79636;
@@ -172,6 +191,9 @@
   text-align: center;
   white-space: nowrap;
 }
+:global(.noUi-target[disabled] .noUi-tooltip) {
+  color: #D5D5DE;
+}
 :global(.noUi-horizontal .noUi-tooltip) {
   -webkit-transform: translate(-50%, 0);
   transform: translate(-50%, 0);
@@ -186,4 +208,4 @@
 }
 </style>
 
-<div class="rangeSlider" bind:this={slider}></div>
+<div class="rangeSlider" bind:this={element}></div>
