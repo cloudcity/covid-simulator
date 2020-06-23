@@ -331,7 +331,7 @@ SEIRModel.generateData = function(region, interventions, days) {
   let TOTAL_POPULATION = 1000000
   let START_DAY = 0
   let END_DAY = days
-  let initial_infected = (0.1 * 0.01)
+  let initial_infected = (0.1 * 0.001)
 
   let population = np.unpack(WORLD_POP[region]).map(e => e * TOTAL_POPULATION)
   let pop_0 = population.map(f => [
