@@ -9,6 +9,7 @@ import zeros from "./zeros"
 let numjs = {
   array: ndarray,
   dup: dup,
+  muleq: ops.muleq,
   mulseq: ops.mulseq,
   pack: pack,
   sum: ops.sum,

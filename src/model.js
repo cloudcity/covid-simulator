@@ -74,8 +74,11 @@ let NPI_IMPACTS = {
   'Quarantine': { chi: 0.63 },
   'Quarantine and tracing': { chi: 0.48 },
   'School closure': {
-    xi: 0,
-    indices: [[0, 0]],
+    cohort_chi: [
+      [0.25, 0.8, 1.52],
+      [0.8, 0.74, 1],
+      [1.52, 1, 1],
+    ]
   },
   'Shelter in place': { chi: 0.34 },
   'Shielding the elderly': {
@@ -286,9 +289,16 @@ SEIRModel.model_input = function (
 
   let _apply = function (npi, npi_impacts, contact_matrix) {
     let impact = npi_impacts[npi] || {};
+    if (impact['cohort_chi']) {
+      np.muleq(contact_matrix, np.pack(impact['cohort_chi']))
+      return contact_matrix
+    }
+
     if (impact['chi']) {
       np.mulseq(contact_matrix, impact['chi']);
+      return contact_matrix
     }
+
     for (let [x, y] of impact['indices'] || []) {
       x = x < 0 ? contact_matrix.shape[0] + x : x
       y = y < 0 ? contact_matrix.shape[1] + y : y
