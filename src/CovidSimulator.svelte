@@ -292,7 +292,7 @@
     display: inline-block;
     position: relative;
     padding: 0;
-    margin: 0;
+    margin: 0 0 0 10px;
   }
 
   .radio .control-label {
@@ -305,7 +305,6 @@
 
   .radio label {
     display: block;
-    color: #807F8B;
   }
 
   .radio label:before {
