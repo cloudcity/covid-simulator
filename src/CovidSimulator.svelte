@@ -197,21 +197,21 @@
     margin: 0 3px 0 0;
     width: 12px;
     height: 12px;
-    border: 1px solid #D5D5DE;
+    border: 1px solid #70708F;
     background-color: transparent;
   }
 
   .control-name.enabled label:after {
-    width: 8px;
-    height: 8px;
     position: absolute;
-    top: 5px;
-    left: 3px;
     content: " ";
     display: block;
-    background: #D35C08;
+    width: 14px;
+    height: 14px;
+    top: 2px;
+    left: 0;
+    background: url("data:image/svg+xml,%3Csvg width='14' height='14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23D35C08' d='M0 0h14v14H0z'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12.23 3.36l-6.17 8.228-3.77-3.769 1.117-1.116 2.481 2.481 5.08-6.772 1.262.948z' fill='%23fff'/%3E%3C/svg%3E") no-repeat;
   }
-  
+
   .control-note {
     font-size: 13px;
     margin-top: -5px;
@@ -224,8 +224,8 @@
 
   .simple .control-label {
     margin-top: 25px;
-    width: 10%;
-    text-align: center;
+    width: auto;
+    text-align: left;
   }
 
   .simple .slider-container {
@@ -305,6 +305,7 @@
 
   .radio label {
     display: block;
+    color: #464653;
   }
 
   .radio label:before {
@@ -316,7 +317,7 @@
     width: 12px;
     height: 12px;
     border-radius: 10px;
-    border: 1px solid #D5D5DE;
+    border: 1px solid #464653;
     background-color: transparent;
   }
 
@@ -332,17 +333,22 @@
     background: #D35C08;
   }
 
+  label.tracing:before {
+    border-color: #464653;
+  }
+
   .control-tooltip:after {
     position: absolute;
     top: 12px;
     right: 14px;
-    content: "\24D8";
-    width: 13px;
-    height: 13px;
     text-align: center;
     font-size: 18px;
     font-weight: bold;
     color: #AAA8B8;
+    width: 16px;
+    height: 16px;
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8.042' cy='8.042' r='7.458' fill='%23fff' stroke='%2370708F'/%3E%3Cpath fill='%2370708F' d='M7.25 6.498h1.5v6.5h-1.5z'/%3E%3Ccircle cx='8' cy='4' r='1' fill='%2370708F'/%3E%3C/svg%3E");
   }
 
   .explain .control-name {
