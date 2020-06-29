@@ -463,7 +463,7 @@
         </div>
         <div class="control-tooltip" on:click={showExplanation}></div>
         <div class="control-explanation">
-          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We assumed a reduction in transmission by 18%, although results in various settings vary. (<a href="https://www.thelancet.com/action/showPdf?pii=S2352-4642%2820%2930095-X" target="_blank">Reference</a>)
+          Community acceptance may be stronger if alternative services for childcare and student learning and provision of nutrition are established. We used reductions in contacts by age groups in our age-structured model to replicate the findings of Litinova et al. (2019) (<a href="https://www.thelancet.com/action/showPdf?pii=S2352-4642%2820%2930095-X" target="_blank">Reference</a>)
         </div>
         <div class="control-group slider">
           <div class="slider-container">
