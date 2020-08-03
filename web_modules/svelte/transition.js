@@ -1,0 +1,1 @@
+import{identity as a}from"./internal.js";function b(c,{delay:d=0,duration:e=400,easing:f=a}){const g=+getComputedStyle(c).opacity;return{delay:d,duration:e,easing:f,css:h=>`opacity: ${h*g}`}}export{b as fade};
