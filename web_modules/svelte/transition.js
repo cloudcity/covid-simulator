@@ -1,1 +1,1 @@
-import{identity as a}from"./internal.js";function b(c,{delay:d=0,duration:e=400,easing:f=a}){const g=+getComputedStyle(c).opacity;return{delay:d,duration:e,easing:f,css:h=>`opacity: ${h*g}`}}export{b as fade};
+import{identity as c}from"./internal.js";function p(t,{delay:o=0,duration:e=400,easing:i=c}){const n=+getComputedStyle(t).opacity;return{delay:o,duration:e,easing:i,css:r=>`opacity: ${r*n}`}}export{p as fade};

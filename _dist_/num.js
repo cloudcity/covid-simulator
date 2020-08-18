@@ -1,1 +1,1 @@
-import b from"../web_modules/ndarray.js";import c from"./dup.js";import a from"./ops.js";import d from"./pack.js";import e from"./unpack.js";import f from"./zeros.js";let g={array:b,dup:c,muleq:a.muleq,mulseq:a.mulseq,pack:d,sum:a.sum,unpack:e,zeros:f};export default g;
+import m from"../web_modules/ndarray.js";import o from"./dup.js";import r from"./ops.js";import p from"./pack.js";import s from"./unpack.js";import u from"./zeros.js";let a={array:m,dup:o,muleq:r.muleq,mulseq:r.mulseq,pack:p,sum:r.sum,unpack:s,zeros:u};export default a;
