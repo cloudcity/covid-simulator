@@ -1,1 +1,1 @@
-import{identity as c}from"./internal.js";function p(t,{delay:o=0,duration:e=400,easing:i=c}){const n=+getComputedStyle(t).opacity;return{delay:o,duration:e,easing:i,css:r=>`opacity: ${r*n}`}}export{p as fade};
+import{D as c}from"../common/index-41f7deaa.js";function d(t,{delay:o=0,duration:e=400,easing:i=c}){const n=+getComputedStyle(t).opacity;return{delay:o,duration:e,easing:i,css:a=>`opacity: ${a*n}`}}export{d as fade};
