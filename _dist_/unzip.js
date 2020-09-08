@@ -1,1 +1,1 @@
-export default function f(n){for(var u=n.length,v=n[0].length,e=[],r=0;r<v;r++){for(var l=[],a=0;a<u;a++)l.push(n[a][r]);e.push(l)}return e}
+export default function v(n){for(var t=n.length,u=n[0].length,a=[],e=0;e<u;e++){for(var l=[],r=0;r<t;r++)l.push(n[r][e]);a.push(l)}return a}
