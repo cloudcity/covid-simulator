@@ -1,1 +1,47 @@
-function a(r,e,t){var f=r[t]|0;if(f<=0)return[];var i=new Array(f),n;if(t===r.length-1)for(n=0;n<f;++n)i[n]=e;else for(n=0;n<f;++n)i[n]=a(r,e,t+1);return i}function u(r,e){var t,f;for(t=new Array(r),f=0;f<r;++f)t[f]=e;return t}function p(r,e){typeof e=="undefined"&&(e=0);switch(typeof r){case"number":if(r>0)return u(r|0,e);break;case"object":if(typeof r.length=="number")return a(r,e,0);break}return[]}export default p;
+function dupe_array(count, value, i) {
+  var c = count[i]|0
+  if(c <= 0) {
+    return []
+  }
+  var result = new Array(c), j
+  if(i === count.length-1) {
+    for(j=0; j<c; ++j) {
+      result[j] = value
+    }
+  } else {
+    for(j=0; j<c; ++j) {
+      result[j] = dupe_array(count, value, i+1)
+    }
+  }
+  return result
+}
+
+function dupe_number(count, value) {
+  var result, i
+  result = new Array(count)
+  for(i=0; i<count; ++i) {
+    result[i] = value
+  }
+  return result
+}
+
+function dupe(count, value) {
+  if(typeof value === "undefined") {
+    value = 0
+  }
+  switch(typeof count) {
+    case "number":
+      if(count > 0) {
+        return dupe_number(count|0, value)
+      }
+    break
+    case "object":
+      if(typeof (count.length) === "number") {
+        return dupe_array(count, value, 0)
+      }
+    break
+  }
+  return []
+}
+
+export default dupe

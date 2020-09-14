@@ -1,1 +1,55 @@
-function g(n,r){for(var e=1,f=n.length,u=n[0],o=n[0],a=1;a<f;++a)if(o=u,u=n[a],r(u,o)){if(a===e){e++;continue}n[e++]=u}return n.length=e,n}function h(n){for(var r=1,e=n.length,f=n[0],u=n[0],o=1;o<e;++o,u=f)if(u=f,f=n[o],f!==u){if(o===r){r++;continue}n[r++]=f}return n.length=r,n}function q(n,r,e){return n.length===0?n:r?(e||n.sort(r),g(n,r)):(e||n.sort(),h(n))}export default q;
+function unique_pred(list, compare) {
+  var ptr = 1
+    , len = list.length
+    , a=list[0], b=list[0]
+  for(var i=1; i<len; ++i) {
+    b = a
+    a = list[i]
+    if(compare(a, b)) {
+      if(i === ptr) {
+        ptr++
+        continue
+      }
+      list[ptr++] = a
+    }
+  }
+  list.length = ptr
+  return list
+}
+
+function unique_eq(list) {
+  var ptr = 1
+    , len = list.length
+    , a=list[0], b = list[0]
+  for(var i=1; i<len; ++i, b=a) {
+    b = a
+    a = list[i]
+    if(a !== b) {
+      if(i === ptr) {
+        ptr++
+        continue
+      }
+      list[ptr++] = a
+    }
+  }
+  list.length = ptr
+  return list
+}
+
+function unique(list, compare, sorted) {
+  if(list.length === 0) {
+    return list
+  }
+  if(compare) {
+    if(!sorted) {
+      list.sort(compare)
+    }
+    return unique_pred(list, compare)
+  }
+  if(!sorted) {
+    list.sort()
+  }
+  return unique_eq(list)
+}
+
+export default unique

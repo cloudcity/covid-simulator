@@ -1,1 +1,461 @@
-import e from"./compiler.js";var s={},n={body:"",args:[],thisVars:[],localVars:[]};function l(a){if(!a)return n;for(var r=0;r<a.args.length;++r){var i=a.args[r];r===0?a.args[r]={name:i,lvalue:!0,rvalue:!!a.rvalue,count:a.count||1}:a.args[r]={name:i,lvalue:!1,rvalue:!0,count:1}}return a.thisVars||(a.thisVars=[]),a.localVars||(a.localVars=[]),a}function c(a){return e({args:a.args,pre:l(a.pre),body:l(a.body),post:l(a.proc),funcName:a.funcName})}function t(a){for(var r=[],i=0;i<a.args.length;++i)r.push("a"+i);var b=new Function("P",["return function ",a.funcName,"_ndarrayops(",r.join(","),") {P(",r.join(","),");return a0}"].join(""));return b(c(a))}var o={add:"+",sub:"-",mul:"*",div:"/",mod:"%",band:"&",bor:"|",bxor:"^",lshift:"<<",rshift:">>",rrshift:">>>"};(function(){for(var a in o){var r=o[a];s[a]=t({args:["array","array","array"],body:{args:["a","b","c"],body:"a=b"+r+"c"},funcName:a}),s[a+"eq"]=t({args:["array","array"],body:{args:["a","b"],body:"a"+r+"=b"},rvalue:!0,funcName:a+"eq"}),s[a+"s"]=t({args:["array","array","scalar"],body:{args:["a","b","s"],body:"a=b"+r+"s"},funcName:a+"s"}),s[a+"seq"]=t({args:["array","scalar"],body:{args:["a","s"],body:"a"+r+"=s"},rvalue:!0,funcName:a+"seq"})}})();var _={not:"!",bnot:"~",neg:"-",recip:"1.0/"};(function(){for(var a in _){var r=_[a];s[a]=t({args:["array","array"],body:{args:["a","b"],body:"a="+r+"b"},funcName:a}),s[a+"eq"]=t({args:["array"],body:{args:["a"],body:"a="+r+"a"},rvalue:!0,count:2,funcName:a+"eq"})}})();var h={and:"&&",or:"||",eq:"===",neq:"!==",lt:"<",gt:">",leq:"<=",geq:">="};(function(){for(var a in h){var r=h[a];s[a]=t({args:["array","array","array"],body:{args:["a","b","c"],body:"a=b"+r+"c"},funcName:a}),s[a+"s"]=t({args:["array","array","scalar"],body:{args:["a","b","s"],body:"a=b"+r+"s"},funcName:a+"s"}),s[a+"eq"]=t({args:["array","array"],body:{args:["a","b"],body:"a=a"+r+"b"},rvalue:!0,count:2,funcName:a+"eq"}),s[a+"seq"]=t({args:["array","scalar"],body:{args:["a","s"],body:"a=a"+r+"s"},rvalue:!0,count:2,funcName:a+"seq"})}})();var u=["abs","acos","asin","atan","ceil","cos","exp","floor","log","round","sin","sqrt","tan"];(function(){for(var a=0;a<u.length;++a){var r=u[a];s[r]=t({args:["array","array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b"],body:"a=this_f(b)",thisVars:["this_f"]},funcName:r}),s[r+"eq"]=t({args:["array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a"],body:"a=this_f(a)",thisVars:["this_f"]},rvalue:!0,count:2,funcName:r+"eq"})}})();var y=["max","min","atan2","pow"];(function(){for(var a=0;a<y.length;++a){var r=y[a];s[r]=t({args:["array","array","array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b","c"],body:"a=this_f(b,c)",thisVars:["this_f"]},funcName:r}),s[r+"s"]=t({args:["array","array","scalar"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b","c"],body:"a=this_f(b,c)",thisVars:["this_f"]},funcName:r+"s"}),s[r+"eq"]=t({args:["array","array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b"],body:"a=this_f(a,b)",thisVars:["this_f"]},rvalue:!0,count:2,funcName:r+"eq"}),s[r+"seq"]=t({args:["array","scalar"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b"],body:"a=this_f(a,b)",thisVars:["this_f"]},rvalue:!0,count:2,funcName:r+"seq"})}})();var g=["atan2","pow"];(function(){for(var a=0;a<g.length;++a){var r=g[a];s[r+"op"]=t({args:["array","array","array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b","c"],body:"a=this_f(c,b)",thisVars:["this_f"]},funcName:r+"op"}),s[r+"ops"]=t({args:["array","array","scalar"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b","c"],body:"a=this_f(c,b)",thisVars:["this_f"]},funcName:r+"ops"}),s[r+"opeq"]=t({args:["array","array"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b"],body:"a=this_f(b,a)",thisVars:["this_f"]},rvalue:!0,count:2,funcName:r+"opeq"}),s[r+"opseq"]=t({args:["array","scalar"],pre:{args:[],body:"this_f=Math."+r,thisVars:["this_f"]},body:{args:["a","b"],body:"a=this_f(b,a)",thisVars:["this_f"]},rvalue:!0,count:2,funcName:r+"opseq"})}})(),s.any=e({args:["array"],pre:n,body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:1}],body:"if(a){return true}",localVars:[],thisVars:[]},post:{args:[],localVars:[],thisVars:[],body:"return false"},funcName:"any"}),s.all=e({args:["array"],pre:n,body:{args:[{name:"x",lvalue:!1,rvalue:!0,count:1}],body:"if(!x){return false}",localVars:[],thisVars:[]},post:{args:[],localVars:[],thisVars:[],body:"return true"},funcName:"all"}),s.sum=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=0"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:1}],body:"this_s+=a",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return this_s"},funcName:"sum"}),s.prod=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=1"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:1}],body:"this_s*=a",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return this_s"},funcName:"prod"}),s.norm2squared=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=0"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:2}],body:"this_s+=a*a",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return this_s"},funcName:"norm2squared"}),s.norm2=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=0"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:2}],body:"this_s+=a*a",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return Math.sqrt(this_s)"},funcName:"norm2"}),s.norminf=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=0"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:4}],body:"if(-a>this_s){this_s=-a}else if(a>this_s){this_s=a}",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return this_s"},funcName:"norminf"}),s.norm1=e({args:["array"],pre:{args:[],localVars:[],thisVars:["this_s"],body:"this_s=0"},body:{args:[{name:"a",lvalue:!1,rvalue:!0,count:3}],body:"this_s+=a<0?-a:a",localVars:[],thisVars:["this_s"]},post:{args:[],localVars:[],thisVars:["this_s"],body:"return this_s"},funcName:"norm1"}),s.sup=e({args:["array"],pre:{body:"this_h=-Infinity",args:[],thisVars:["this_h"],localVars:[]},body:{body:"if(_inline_1_arg0_>this_h)this_h=_inline_1_arg0_",args:[{name:"_inline_1_arg0_",lvalue:!1,rvalue:!0,count:2}],thisVars:["this_h"],localVars:[]},post:{body:"return this_h",args:[],thisVars:["this_h"],localVars:[]}}),s.inf=e({args:["array"],pre:{body:"this_h=Infinity",args:[],thisVars:["this_h"],localVars:[]},body:{body:"if(_inline_1_arg0_<this_h)this_h=_inline_1_arg0_",args:[{name:"_inline_1_arg0_",lvalue:!1,rvalue:!0,count:2}],thisVars:["this_h"],localVars:[]},post:{body:"return this_h",args:[],thisVars:["this_h"],localVars:[]}}),s.argmin=e({args:["index","array","shape"],pre:{body:"{this_v=Infinity;this_i=_inline_0_arg2_.slice(0)}",args:[{name:"_inline_0_arg0_",lvalue:!1,rvalue:!1,count:0},{name:"_inline_0_arg1_",lvalue:!1,rvalue:!1,count:0},{name:"_inline_0_arg2_",lvalue:!1,rvalue:!0,count:1}],thisVars:["this_i","this_v"],localVars:[]},body:{body:"{if(_inline_1_arg1_<this_v){this_v=_inline_1_arg1_;for(var _inline_1_k=0;_inline_1_k<_inline_1_arg0_.length;++_inline_1_k){this_i[_inline_1_k]=_inline_1_arg0_[_inline_1_k]}}}",args:[{name:"_inline_1_arg0_",lvalue:!1,rvalue:!0,count:2},{name:"_inline_1_arg1_",lvalue:!1,rvalue:!0,count:2}],thisVars:["this_i","this_v"],localVars:["_inline_1_k"]},post:{body:"{return this_i}",args:[],thisVars:["this_i"],localVars:[]}}),s.argmax=e({args:["index","array","shape"],pre:{body:"{this_v=-Infinity;this_i=_inline_0_arg2_.slice(0)}",args:[{name:"_inline_0_arg0_",lvalue:!1,rvalue:!1,count:0},{name:"_inline_0_arg1_",lvalue:!1,rvalue:!1,count:0},{name:"_inline_0_arg2_",lvalue:!1,rvalue:!0,count:1}],thisVars:["this_i","this_v"],localVars:[]},body:{body:"{if(_inline_1_arg1_>this_v){this_v=_inline_1_arg1_;for(var _inline_1_k=0;_inline_1_k<_inline_1_arg0_.length;++_inline_1_k){this_i[_inline_1_k]=_inline_1_arg0_[_inline_1_k]}}}",args:[{name:"_inline_1_arg0_",lvalue:!1,rvalue:!0,count:2},{name:"_inline_1_arg1_",lvalue:!1,rvalue:!0,count:2}],thisVars:["this_i","this_v"],localVars:["_inline_1_k"]},post:{body:"{return this_i}",args:[],thisVars:["this_i"],localVars:[]}}),s.random=t({args:["array"],pre:{args:[],body:"this_f=Math.random",thisVars:["this_f"]},body:{args:["a"],body:"a=this_f()",thisVars:["this_f"]},funcName:"random"}),s.assign=t({args:["array","array"],body:{args:["a","b"],body:"a=b"},funcName:"assign"}),s.assigns=t({args:["array","scalar"],body:{args:["a","b"],body:"a=b"},funcName:"assigns"}),s.equals=e({args:["array","array"],pre:n,body:{args:[{name:"x",lvalue:!1,rvalue:!0,count:1},{name:"y",lvalue:!1,rvalue:!0,count:1}],body:"if(x!==y){return false}",localVars:[],thisVars:[]},post:{args:[],localVars:[],thisVars:[],body:"return true"},funcName:"equals"});export default s;
+import compile from "./compiler.js"
+
+var exports = {}
+
+var EmptyProc = {
+  body: "",
+  args: [],
+  thisVars: [],
+  localVars: []
+}
+
+function fixup(x) {
+  if(!x) {
+    return EmptyProc
+  }
+  for(var i=0; i<x.args.length; ++i) {
+    var a = x.args[i]
+    if(i === 0) {
+      x.args[i] = {name: a, lvalue:true, rvalue: !!x.rvalue, count:x.count||1 }
+    } else {
+      x.args[i] = {name: a, lvalue:false, rvalue:true, count: 1}
+    }
+  }
+  if(!x.thisVars) {
+    x.thisVars = []
+  }
+  if(!x.localVars) {
+    x.localVars = []
+  }
+  return x
+}
+
+function pcompile(user_args) {
+  return compile({
+    args:     user_args.args,
+    pre:      fixup(user_args.pre),
+    body:     fixup(user_args.body),
+    post:     fixup(user_args.proc),
+    funcName: user_args.funcName
+  })
+}
+
+function makeOp(user_args) {
+  var args = []
+  for(var i=0; i<user_args.args.length; ++i) {
+    args.push("a"+i)
+  }
+  var wrapper = new Function("P", [
+    "return function ", user_args.funcName, "_ndarrayops(", args.join(","), ") {P(", args.join(","), ");return a0}"
+  ].join(""))
+  return wrapper(pcompile(user_args))
+}
+
+var assign_ops = {
+  add:  "+",
+  sub:  "-",
+  mul:  "*",
+  div:  "/",
+  mod:  "%",
+  band: "&",
+  bor:  "|",
+  bxor: "^",
+  lshift: "<<",
+  rshift: ">>",
+  rrshift: ">>>"
+}
+;(function(){
+  for(var id in assign_ops) {
+    var op = assign_ops[id]
+    exports[id] = makeOp({
+      args: ["array","array","array"],
+      body: {args:["a","b","c"],
+             body: "a=b"+op+"c"},
+      funcName: id
+    })
+    exports[id+"eq"] = makeOp({
+      args: ["array","array"],
+      body: {args:["a","b"],
+             body:"a"+op+"=b"},
+      rvalue: true,
+      funcName: id+"eq"
+    })
+    exports[id+"s"] = makeOp({
+      args: ["array", "array", "scalar"],
+      body: {args:["a","b","s"],
+             body:"a=b"+op+"s"},
+      funcName: id+"s"
+    })
+    exports[id+"seq"] = makeOp({
+      args: ["array","scalar"],
+      body: {args:["a","s"],
+             body:"a"+op+"=s"},
+      rvalue: true,
+      funcName: id+"seq"
+    })
+  }
+})();
+
+var unary_ops = {
+  not: "!",
+  bnot: "~",
+  neg: "-",
+  recip: "1.0/"
+}
+;(function(){
+  for(var id in unary_ops) {
+    var op = unary_ops[id]
+    exports[id] = makeOp({
+      args: ["array", "array"],
+      body: {args:["a","b"],
+             body:"a="+op+"b"},
+      funcName: id
+    })
+    exports[id+"eq"] = makeOp({
+      args: ["array"],
+      body: {args:["a"],
+             body:"a="+op+"a"},
+      rvalue: true,
+      count: 2,
+      funcName: id+"eq"
+    })
+  }
+})();
+
+var binary_ops = {
+  and: "&&",
+  or: "||",
+  eq: "===",
+  neq: "!==",
+  lt: "<",
+  gt: ">",
+  leq: "<=",
+  geq: ">="
+}
+;(function() {
+  for(var id in binary_ops) {
+    var op = binary_ops[id]
+    exports[id] = makeOp({
+      args: ["array","array","array"],
+      body: {args:["a", "b", "c"],
+             body:"a=b"+op+"c"},
+      funcName: id
+    })
+    exports[id+"s"] = makeOp({
+      args: ["array","array","scalar"],
+      body: {args:["a", "b", "s"],
+             body:"a=b"+op+"s"},
+      funcName: id+"s"
+    })
+    exports[id+"eq"] = makeOp({
+      args: ["array", "array"],
+      body: {args:["a", "b"],
+             body:"a=a"+op+"b"},
+      rvalue:true,
+      count:2,
+      funcName: id+"eq"
+    })
+    exports[id+"seq"] = makeOp({
+      args: ["array", "scalar"],
+      body: {args:["a","s"],
+             body:"a=a"+op+"s"},
+      rvalue:true,
+      count:2,
+      funcName: id+"seq"
+    })
+  }
+})();
+
+var math_unary = [
+  "abs",
+  "acos",
+  "asin",
+  "atan",
+  "ceil",
+  "cos",
+  "exp",
+  "floor",
+  "log",
+  "round",
+  "sin",
+  "sqrt",
+  "tan"
+]
+;(function() {
+  for(var i=0; i<math_unary.length; ++i) {
+    var f = math_unary[i]
+    exports[f] = makeOp({
+                    args: ["array", "array"],
+                    pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                    body: {args:["a","b"], body:"a=this_f(b)", thisVars:["this_f"]},
+                    funcName: f
+                  })
+    exports[f+"eq"] = makeOp({
+                      args: ["array"],
+                      pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                      body: {args: ["a"], body:"a=this_f(a)", thisVars:["this_f"]},
+                      rvalue: true,
+                      count: 2,
+                      funcName: f+"eq"
+                    })
+  }
+})();
+
+var math_comm = [
+  "max",
+  "min",
+  "atan2",
+  "pow"
+]
+;(function(){
+  for(var i=0; i<math_comm.length; ++i) {
+    var f= math_comm[i]
+    exports[f] = makeOp({
+                  args:["array", "array", "array"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b","c"], body:"a=this_f(b,c)", thisVars:["this_f"]},
+                  funcName: f
+                })
+    exports[f+"s"] = makeOp({
+                  args:["array", "array", "scalar"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b","c"], body:"a=this_f(b,c)", thisVars:["this_f"]},
+                  funcName: f+"s"
+                  })
+    exports[f+"eq"] = makeOp({ args:["array", "array"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b"], body:"a=this_f(a,b)", thisVars:["this_f"]},
+                  rvalue: true,
+                  count: 2,
+                  funcName: f+"eq"
+                  })
+    exports[f+"seq"] = makeOp({ args:["array", "scalar"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b"], body:"a=this_f(a,b)", thisVars:["this_f"]},
+                  rvalue:true,
+                  count:2,
+                  funcName: f+"seq"
+                  })
+  }
+})();
+
+var math_noncomm = [
+  "atan2",
+  "pow"
+]
+;(function(){
+  for(var i=0; i<math_noncomm.length; ++i) {
+    var f= math_noncomm[i]
+    exports[f+"op"] = makeOp({
+                  args:["array", "array", "array"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b","c"], body:"a=this_f(c,b)", thisVars:["this_f"]},
+                  funcName: f+"op"
+                })
+    exports[f+"ops"] = makeOp({
+                  args:["array", "array", "scalar"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b","c"], body:"a=this_f(c,b)", thisVars:["this_f"]},
+                  funcName: f+"ops"
+                  })
+    exports[f+"opeq"] = makeOp({ args:["array", "array"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b"], body:"a=this_f(b,a)", thisVars:["this_f"]},
+                  rvalue: true,
+                  count: 2,
+                  funcName: f+"opeq"
+                  })
+    exports[f+"opseq"] = makeOp({ args:["array", "scalar"],
+                  pre: {args:[], body:"this_f=Math."+f, thisVars:["this_f"]},
+                  body: {args:["a","b"], body:"a=this_f(b,a)", thisVars:["this_f"]},
+                  rvalue:true,
+                  count:2,
+                  funcName: f+"opseq"
+                  })
+  }
+})();
+
+exports.any = compile({
+  args:["array"],
+  pre: EmptyProc,
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:1}], body: "if(a){return true}", localVars: [], thisVars: []},
+  post: {args:[], localVars:[], thisVars:[], body:"return false"},
+  funcName: "any"
+})
+
+exports.all = compile({
+  args:["array"],
+  pre: EmptyProc,
+  body: {args:[{name:"x", lvalue:false, rvalue:true, count:1}], body: "if(!x){return false}", localVars: [], thisVars: []},
+  post: {args:[], localVars:[], thisVars:[], body:"return true"},
+  funcName: "all"
+})
+
+exports.sum = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=0"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:1}], body: "this_s+=a", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return this_s"},
+  funcName: "sum"
+})
+
+exports.prod = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=1"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:1}], body: "this_s*=a", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return this_s"},
+  funcName: "prod"
+})
+
+exports.norm2squared = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=0"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:2}], body: "this_s+=a*a", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return this_s"},
+  funcName: "norm2squared"
+})
+
+exports.norm2 = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=0"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:2}], body: "this_s+=a*a", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return Math.sqrt(this_s)"},
+  funcName: "norm2"
+})
+
+
+exports.norminf = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=0"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:4}], body:"if(-a>this_s){this_s=-a}else if(a>this_s){this_s=a}", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return this_s"},
+  funcName: "norminf"
+})
+
+exports.norm1 = compile({
+  args:["array"],
+  pre: {args:[], localVars:[], thisVars:["this_s"], body:"this_s=0"},
+  body: {args:[{name:"a", lvalue:false, rvalue:true, count:3}], body: "this_s+=a<0?-a:a", localVars: [], thisVars: ["this_s"]},
+  post: {args:[], localVars:[], thisVars:["this_s"], body:"return this_s"},
+  funcName: "norm1"
+})
+
+exports.sup = compile({
+  args: [ "array" ],
+  pre:
+   { body: "this_h=-Infinity",
+     args: [],
+     thisVars: [ "this_h" ],
+     localVars: [] },
+  body:
+   { body: "if(_inline_1_arg0_>this_h)this_h=_inline_1_arg0_",
+     args: [{"name":"_inline_1_arg0_","lvalue":false,"rvalue":true,"count":2} ],
+     thisVars: [ "this_h" ],
+     localVars: [] },
+  post:
+   { body: "return this_h",
+     args: [],
+     thisVars: [ "this_h" ],
+     localVars: [] }
+ })
+
+exports.inf = compile({
+  args: [ "array" ],
+  pre:
+   { body: "this_h=Infinity",
+     args: [],
+     thisVars: [ "this_h" ],
+     localVars: [] },
+  body:
+   { body: "if(_inline_1_arg0_<this_h)this_h=_inline_1_arg0_",
+     args: [{"name":"_inline_1_arg0_","lvalue":false,"rvalue":true,"count":2} ],
+     thisVars: [ "this_h" ],
+     localVars: [] },
+  post:
+   { body: "return this_h",
+     args: [],
+     thisVars: [ "this_h" ],
+     localVars: [] }
+ })
+
+exports.argmin = compile({
+  args:["index","array","shape"],
+  pre:{
+    body:"{this_v=Infinity;this_i=_inline_0_arg2_.slice(0)}",
+    args:[
+      {name:"_inline_0_arg0_",lvalue:false,rvalue:false,count:0},
+      {name:"_inline_0_arg1_",lvalue:false,rvalue:false,count:0},
+      {name:"_inline_0_arg2_",lvalue:false,rvalue:true,count:1}
+      ],
+    thisVars:["this_i","this_v"],
+    localVars:[]},
+  body:{
+    body:"{if(_inline_1_arg1_<this_v){this_v=_inline_1_arg1_;for(var _inline_1_k=0;_inline_1_k<_inline_1_arg0_.length;++_inline_1_k){this_i[_inline_1_k]=_inline_1_arg0_[_inline_1_k]}}}",
+    args:[
+      {name:"_inline_1_arg0_",lvalue:false,rvalue:true,count:2},
+      {name:"_inline_1_arg1_",lvalue:false,rvalue:true,count:2}],
+    thisVars:["this_i","this_v"],
+    localVars:["_inline_1_k"]},
+  post:{
+    body:"{return this_i}",
+    args:[],
+    thisVars:["this_i"],
+    localVars:[]}
+})
+
+exports.argmax = compile({
+  args:["index","array","shape"],
+  pre:{
+    body:"{this_v=-Infinity;this_i=_inline_0_arg2_.slice(0)}",
+    args:[
+      {name:"_inline_0_arg0_",lvalue:false,rvalue:false,count:0},
+      {name:"_inline_0_arg1_",lvalue:false,rvalue:false,count:0},
+      {name:"_inline_0_arg2_",lvalue:false,rvalue:true,count:1}
+      ],
+    thisVars:["this_i","this_v"],
+    localVars:[]},
+  body:{
+    body:"{if(_inline_1_arg1_>this_v){this_v=_inline_1_arg1_;for(var _inline_1_k=0;_inline_1_k<_inline_1_arg0_.length;++_inline_1_k){this_i[_inline_1_k]=_inline_1_arg0_[_inline_1_k]}}}",
+    args:[
+      {name:"_inline_1_arg0_",lvalue:false,rvalue:true,count:2},
+      {name:"_inline_1_arg1_",lvalue:false,rvalue:true,count:2}],
+    thisVars:["this_i","this_v"],
+    localVars:["_inline_1_k"]},
+  post:{
+    body:"{return this_i}",
+    args:[],
+    thisVars:["this_i"],
+    localVars:[]}
+})
+
+exports.random = makeOp({
+  args: ["array"],
+  pre: {args:[], body:"this_f=Math.random", thisVars:["this_f"]},
+  body: {args: ["a"], body:"a=this_f()", thisVars:["this_f"]},
+  funcName: "random"
+})
+
+exports.assign = makeOp({
+  args:["array", "array"],
+  body: {args:["a", "b"], body:"a=b"},
+  funcName: "assign" })
+
+exports.assigns = makeOp({
+  args:["array", "scalar"],
+  body: {args:["a", "b"], body:"a=b"},
+  funcName: "assigns" })
+
+
+exports.equals = compile({
+  args:["array", "array"],
+  pre: EmptyProc,
+  body: {args:[{name:"x", lvalue:false, rvalue:true, count:1},
+               {name:"y", lvalue:false, rvalue:true, count:1}],
+        body: "if(x!==y){return false}",
+        localVars: [],
+        thisVars: []},
+  post: {args:[], localVars:[], thisVars:[], body:"return true"},
+  funcName: "equals"
+})
+
+export default exports

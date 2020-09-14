@@ -1,1 +1,379 @@
-import{c as T}from"./common/_commonjsHelpers-be8ed69f.js";var I=T(function(A,B){(function(l){A.exports=l()})(function(){var l=["decimals","thousand","mark","prefix","suffix","encoder","decoder","negativeBefore","negative","edit","undo"];function c(e){return e.split("").reverse().join("")}function h(e,r){return e.substring(0,r.length)===r}function F(e,r){return e.slice(-1*r.length)===r}function p(e,r,o){if((e[r]||e[o])&&e[r]===e[o])throw new Error(r)}function N(e){return typeof e=="number"&&isFinite(e)}function k(e,r){return e=e.toString().split("e"),e=Math.round(+(e[0]+"e"+(e[1]?+e[1]+r:r))),e=e.toString().split("e"),(+(e[0]+"e"+(e[1]?+e[1]-r:-r))).toFixed(r)}function C(e,r,o,n,i,b,w,m,d,v,y,t){var u=t,s,x,f,S="",a="";return b&&(t=b(t)),N(t)?(e!==!1&&parseFloat(t.toFixed(e))===0&&(t=0),t<0&&(s=!0,t=Math.abs(t)),e!==!1&&(t=k(t,e)),t=t.toString(),t.indexOf(".")!==-1?(x=t.split("."),f=x[0],o&&(S=o+x[1])):f=t,r&&(f=c(f).match(/.{1,3}/g),f=c(f.join(c(r)))),s&&m&&(a+=m),n&&(a+=n),s&&d&&(a+=d),a+=f,a+=S,i&&(a+=i),v&&(a=v(a,u)),a):!1}function j(e,r,o,n,i,b,w,m,d,v,y,t){var u,s="";return y&&(t=y(t)),!t||typeof t!="string"?!1:(m&&h(t,m)&&(t=t.replace(m,""),u=!0),n&&h(t,n)&&(t=t.replace(n,"")),d&&h(t,d)&&(t=t.replace(d,""),u=!0),i&&F(t,i)&&(t=t.slice(0,-1*i.length)),r&&(t=t.split(r).join("")),o&&(t=t.replace(o,".")),u&&(s+="-"),s+=t,s=s.replace(/[^0-9\.\-.]/g,""),s===""?!1:(s=Number(s),w&&(s=w(s)),N(s)?s:!1))}function E(e){var r,o,n,i={};for(e.suffix===void 0&&(e.suffix=e.postfix),r=0;r<l.length;r+=1)if(o=l[r],n=e[o],n===void 0)o==="negative"&&!i.negativeBefore?i[o]="-":o==="mark"&&i.thousand!=="."?i[o]=".":i[o]=!1;else if(o==="decimals")if(n>=0&&n<8)i[o]=n;else throw new Error(o);else if(o==="encoder"||o==="decoder"||o==="edit"||o==="undo")if(typeof n=="function")i[o]=n;else throw new Error(o);else if(typeof n=="string")i[o]=n;else throw new Error(o);return p(i,"mark","thousand"),p(i,"prefix","negative"),p(i,"prefix","negativeBefore"),i}function R(e,r,o){var n,i=[];for(n=0;n<l.length;n+=1)i.push(e[l[n]]);return i.push(o),r.apply("",i)}function g(e){if(!(this instanceof g))return new g(e);if(typeof e!="object")return;e=E(e),this.to=function(r){return R(e,C,r)},this.from=function(r){return R(e,j,r)}}return g})});export default I;
+import { c as createCommonjsModule } from './common/_commonjsHelpers-be8ed69f.js';
+
+var wNumb = createCommonjsModule(function (module, exports) {
+(function(factory) {
+  {
+    // Node/CommonJS
+    module.exports = factory();
+  }
+})(function() {
+
+  var FormatOptions = [
+    "decimals",
+    "thousand",
+    "mark",
+    "prefix",
+    "suffix",
+    "encoder",
+    "decoder",
+    "negativeBefore",
+    "negative",
+    "edit",
+    "undo"
+  ];
+
+  // General
+
+  // Reverse a string
+  function strReverse(a) {
+    return a
+      .split("")
+      .reverse()
+      .join("");
+  }
+
+  // Check if a string starts with a specified prefix.
+  function strStartsWith(input, match) {
+    return input.substring(0, match.length) === match;
+  }
+
+  // Check is a string ends in a specified suffix.
+  function strEndsWith(input, match) {
+    return input.slice(-1 * match.length) === match;
+  }
+
+  // Throw an error if formatting options are incompatible.
+  function throwEqualError(F, a, b) {
+    if ((F[a] || F[b]) && F[a] === F[b]) {
+      throw new Error(a);
+    }
+  }
+
+  // Check if a number is finite and not NaN
+  function isValidNumber(input) {
+    return typeof input === "number" && isFinite(input);
+  }
+
+  // Provide rounding-accurate toFixed method.
+  // Borrowed: http://stackoverflow.com/a/21323330/775265
+  function toFixed(value, exp) {
+    value = value.toString().split("e");
+    value = Math.round(+(value[0] + "e" + (value[1] ? +value[1] + exp : exp)));
+    value = value.toString().split("e");
+    return (+(value[0] + "e" + (value[1] ? +value[1] - exp : -exp))).toFixed(exp);
+  }
+
+  // Formatting
+
+  // Accept a number as input, output formatted string.
+  function formatTo(
+    decimals,
+    thousand,
+    mark,
+    prefix,
+    suffix,
+    encoder,
+    decoder,
+    negativeBefore,
+    negative,
+    edit,
+    undo,
+    input
+  ) {
+    var originalInput = input,
+      inputIsNegative,
+      inputPieces,
+      inputBase,
+      inputDecimals = "",
+      output = "";
+
+    // Apply user encoder to the input.
+    // Expected outcome: number.
+    if (encoder) {
+      input = encoder(input);
+    }
+
+    // Stop if no valid number was provided, the number is infinite or NaN.
+    if (!isValidNumber(input)) {
+      return false;
+    }
+
+    // Rounding away decimals might cause a value of -0
+    // when using very small ranges. Remove those cases.
+    if (decimals !== false && parseFloat(input.toFixed(decimals)) === 0) {
+      input = 0;
+    }
+
+    // Formatting is done on absolute numbers,
+    // decorated by an optional negative symbol.
+    if (input < 0) {
+      inputIsNegative = true;
+      input = Math.abs(input);
+    }
+
+    // Reduce the number of decimals to the specified option.
+    if (decimals !== false) {
+      input = toFixed(input, decimals);
+    }
+
+    // Transform the number into a string, so it can be split.
+    input = input.toString();
+
+    // Break the number on the decimal separator.
+    if (input.indexOf(".") !== -1) {
+      inputPieces = input.split(".");
+
+      inputBase = inputPieces[0];
+
+      if (mark) {
+        inputDecimals = mark + inputPieces[1];
+      }
+    } else {
+      // If it isn't split, the entire number will do.
+      inputBase = input;
+    }
+
+    // Group numbers in sets of three.
+    if (thousand) {
+      inputBase = strReverse(inputBase).match(/.{1,3}/g);
+      inputBase = strReverse(inputBase.join(strReverse(thousand)));
+    }
+
+    // If the number is negative, prefix with negation symbol.
+    if (inputIsNegative && negativeBefore) {
+      output += negativeBefore;
+    }
+
+    // Prefix the number
+    if (prefix) {
+      output += prefix;
+    }
+
+    // Normal negative option comes after the prefix. Defaults to '-'.
+    if (inputIsNegative && negative) {
+      output += negative;
+    }
+
+    // Append the actual number.
+    output += inputBase;
+    output += inputDecimals;
+
+    // Apply the suffix.
+    if (suffix) {
+      output += suffix;
+    }
+
+    // Run the output through a user-specified post-formatter.
+    if (edit) {
+      output = edit(output, originalInput);
+    }
+
+    // All done.
+    return output;
+  }
+
+  // Accept a sting as input, output decoded number.
+  function formatFrom(
+    decimals,
+    thousand,
+    mark,
+    prefix,
+    suffix,
+    encoder,
+    decoder,
+    negativeBefore,
+    negative,
+    edit,
+    undo,
+    input
+  ) {
+    var inputIsNegative,
+      output = "";
+
+    // User defined pre-decoder. Result must be a non empty string.
+    if (undo) {
+      input = undo(input);
+    }
+
+    // Test the input. Can't be empty.
+    if (!input || typeof input !== "string") {
+      return false;
+    }
+
+    // If the string starts with the negativeBefore value: remove it.
+    // Remember is was there, the number is negative.
+    if (negativeBefore && strStartsWith(input, negativeBefore)) {
+      input = input.replace(negativeBefore, "");
+      inputIsNegative = true;
+    }
+
+    // Repeat the same procedure for the prefix.
+    if (prefix && strStartsWith(input, prefix)) {
+      input = input.replace(prefix, "");
+    }
+
+    // And again for negative.
+    if (negative && strStartsWith(input, negative)) {
+      input = input.replace(negative, "");
+      inputIsNegative = true;
+    }
+
+    // Remove the suffix.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice
+    if (suffix && strEndsWith(input, suffix)) {
+      input = input.slice(0, -1 * suffix.length);
+    }
+
+    // Remove the thousand grouping.
+    if (thousand) {
+      input = input.split(thousand).join("");
+    }
+
+    // Set the decimal separator back to period.
+    if (mark) {
+      input = input.replace(mark, ".");
+    }
+
+    // Prepend the negative symbol.
+    if (inputIsNegative) {
+      output += "-";
+    }
+
+    // Add the number
+    output += input;
+
+    // Trim all non-numeric characters (allow '.' and '-');
+    output = output.replace(/[^0-9\.\-.]/g, "");
+
+    // The value contains no parse-able number.
+    if (output === "") {
+      return false;
+    }
+
+    // Covert to number.
+    output = Number(output);
+
+    // Run the user-specified post-decoder.
+    if (decoder) {
+      output = decoder(output);
+    }
+
+    // Check is the output is valid, otherwise: return false.
+    if (!isValidNumber(output)) {
+      return false;
+    }
+
+    return output;
+  }
+
+  // Framework
+
+  // Validate formatting options
+  function validate(inputOptions) {
+    var i,
+      optionName,
+      optionValue,
+      filteredOptions = {};
+
+    if (inputOptions["suffix"] === undefined) {
+      inputOptions["suffix"] = inputOptions["postfix"];
+    }
+
+    for (i = 0; i < FormatOptions.length; i += 1) {
+      optionName = FormatOptions[i];
+      optionValue = inputOptions[optionName];
+
+      if (optionValue === undefined) {
+        // Only default if negativeBefore isn't set.
+        if (optionName === "negative" && !filteredOptions.negativeBefore) {
+          filteredOptions[optionName] = "-";
+          // Don't set a default for mark when 'thousand' is set.
+        } else if (optionName === "mark" && filteredOptions.thousand !== ".") {
+          filteredOptions[optionName] = ".";
+        } else {
+          filteredOptions[optionName] = false;
+        }
+
+        // Floating points in JS are stable up to 7 decimals.
+      } else if (optionName === "decimals") {
+        if (optionValue >= 0 && optionValue < 8) {
+          filteredOptions[optionName] = optionValue;
+        } else {
+          throw new Error(optionName);
+        }
+
+        // These options, when provided, must be functions.
+      } else if (
+        optionName === "encoder" ||
+        optionName === "decoder" ||
+        optionName === "edit" ||
+        optionName === "undo"
+      ) {
+        if (typeof optionValue === "function") {
+          filteredOptions[optionName] = optionValue;
+        } else {
+          throw new Error(optionName);
+        }
+
+        // Other options are strings.
+      } else {
+        if (typeof optionValue === "string") {
+          filteredOptions[optionName] = optionValue;
+        } else {
+          throw new Error(optionName);
+        }
+      }
+    }
+
+    // Some values can't be extracted from a
+    // string if certain combinations are present.
+    throwEqualError(filteredOptions, "mark", "thousand");
+    throwEqualError(filteredOptions, "prefix", "negative");
+    throwEqualError(filteredOptions, "prefix", "negativeBefore");
+
+    return filteredOptions;
+  }
+
+  // Pass all options as function arguments
+  function passAll(options, method, input) {
+    var i,
+      args = [];
+
+    // Add all options in order of FormatOptions
+    for (i = 0; i < FormatOptions.length; i += 1) {
+      args.push(options[FormatOptions[i]]);
+    }
+
+    // Append the input, then call the method, presenting all
+    // options as arguments.
+    args.push(input);
+    return method.apply("", args);
+  }
+
+  function wNumb(options) {
+    if (!(this instanceof wNumb)) {
+      return new wNumb(options);
+    }
+
+    if (typeof options !== "object") {
+      return;
+    }
+
+    options = validate(options);
+
+    // Call 'formatTo' with proper arguments.
+    this.to = function(input) {
+      return passAll(options, formatTo, input);
+    };
+
+    // Call 'formatFrom' with proper arguments.
+    this.from = function(input) {
+      return passAll(options, formatFrom, input);
+    };
+  }
+
+  return wNumb;
+});
+});
+
+export default wNumb;

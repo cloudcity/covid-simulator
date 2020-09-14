@@ -1,1 +1,19 @@
-function u(r){return r&&r.__esModule&&Object.prototype.hasOwnProperty.call(r,"default")?r.default:r}function p(r,n,t){return t={path:n,exports:{},require:function(o,e){return c(o,e??t.path)}},r(t,t.exports),t.exports}function c(){throw new Error("Dynamic requires are not currently supported by @rollup/plugin-commonjs")}export{p as c,u as g};
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+	  path: basedir,
+	  exports: {},
+	  require: function (path, base) {
+      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+    }
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+}
+
+export { createCommonjsModule as c, getDefaultExportFromCjs as g };

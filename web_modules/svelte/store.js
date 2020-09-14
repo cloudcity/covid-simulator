@@ -1,1 +1,55 @@
-import{n as f,s as b}from"../common/index-41f7deaa.js";const n=[];function d(e,u=f){let r;const s=[];function a(i){if(b(e,i)&&(e=i,r)){const c=!n.length;for(let t=0;t<s.length;t+=1){const o=s[t];o[1](),n.push(o,e)}if(c){for(let t=0;t<n.length;t+=2)n[t][0](n[t+1]);n.length=0}}}function l(i){a(i(e))}function p(i,c=f){const t=[i,c];return s.push(t),s.length===1&&(r=u(a)||f),i(e),()=>{const o=s.indexOf(t);o!==-1&&s.splice(o,1),s.length===0&&(r(),r=null)}}return{set:a,update:l,subscribe:p}}export{d as writable};
+import { n as noop, s as safe_not_equal } from '../common/index-41f7deaa.js';
+
+const subscriber_queue = [];
+/**
+ * Create a `Writable` store that allows both updating and reading by subscription.
+ * @param {*=}value initial value
+ * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+ */
+function writable(value, start = noop) {
+    let stop;
+    const subscribers = [];
+    function set(new_value) {
+        if (safe_not_equal(value, new_value)) {
+            value = new_value;
+            if (stop) { // store is ready
+                const run_queue = !subscriber_queue.length;
+                for (let i = 0; i < subscribers.length; i += 1) {
+                    const s = subscribers[i];
+                    s[1]();
+                    subscriber_queue.push(s, value);
+                }
+                if (run_queue) {
+                    for (let i = 0; i < subscriber_queue.length; i += 2) {
+                        subscriber_queue[i][0](subscriber_queue[i + 1]);
+                    }
+                    subscriber_queue.length = 0;
+                }
+            }
+        }
+    }
+    function update(fn) {
+        set(fn(value));
+    }
+    function subscribe(run, invalidate = noop) {
+        const subscriber = [run, invalidate];
+        subscribers.push(subscriber);
+        if (subscribers.length === 1) {
+            stop = start(set) || noop;
+        }
+        run(value);
+        return () => {
+            const index = subscribers.indexOf(subscriber);
+            if (index !== -1) {
+                subscribers.splice(index, 1);
+            }
+            if (subscribers.length === 0) {
+                stop();
+                stop = null;
+            }
+        };
+    }
+    return { set, update, subscribe };
+}
+
+export { writable };

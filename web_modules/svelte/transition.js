@@ -1,1 +1,13 @@
-import{D as c}from"../common/index-41f7deaa.js";function d(t,{delay:o=0,duration:e=400,easing:i=c}){const n=+getComputedStyle(t).opacity;return{delay:o,duration:e,easing:i,css:a=>`opacity: ${a*n}`}}export{d as fade};
+import { D as identity } from '../common/index-41f7deaa.js';
+
+function fade(node, { delay = 0, duration = 400, easing = identity }) {
+    const o = +getComputedStyle(node).opacity;
+    return {
+        delay,
+        duration,
+        easing,
+        css: t => `opacity: ${t * o}`
+    };
+}
+
+export { fade };

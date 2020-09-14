@@ -1,1 +1,47 @@
-import p from"../__snowpack__/env.js";import.meta.env=p;import i from"./CovidSimulator.js";let a=[],n=[];const d=function(t){return function(e,o){e.forEach(r=>{r.type==="attributes"&&t.$set({region:r.target.dataset.region,preset:r.target.dataset.preset})})}};function s(t){document.querySelectorAll("[data-covid-graph]").forEach(e=>{let o=new t({target:e,props:{region:e.dataset.region,preset:e.dataset.preset}});a.push(o);let r=new MutationObserver(d(o));r.observe(e,{attributes:!0})})}document.addEventListener("DOMContentLoaded",()=>s(i));export default a;import.meta.hot&&(import.meta.hot.accept(({module:t})=>{s(t)}),import.meta.hot.dispose(()=>{a.forEach(t=>t.$destroy()),n.forEach(t=>t.disconnect())}));
+import __SNOWPACK_ENV__ from '../__snowpack__/env.js';
+import.meta.env = __SNOWPACK_ENV__;
+
+import CovidSimulator from "./CovidSimulator.js"
+
+let apps = []
+let observers = []
+
+const updateProps = function(app) {
+  return function(mutationsList, observer) {
+    mutationsList.forEach(m => {
+      if (m.type === "attributes") {
+        app.$set({
+          region: m.target.dataset.region,
+          preset: m.target.dataset.preset,
+        })
+      }
+    })
+  }
+};
+
+function createApps(cs) {
+  document.querySelectorAll("[data-covid-graph]").forEach(e => {
+    let app = new cs({target: e, props: {
+      region: e.dataset.region,
+      preset: e.dataset.preset,
+    }})
+    apps.push(app)
+
+    let observer = new MutationObserver(updateProps(app))
+    observer.observe(e, {attributes: true})
+  })
+}
+
+document.addEventListener("DOMContentLoaded", () => createApps(CovidSimulator))
+
+export default apps
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({module}) => {
+    createApps(module)
+  });
+  import.meta.hot.dispose(() => {
+    apps.forEach(a => a.$destroy())
+    observers.forEach(o => o.disconnect())
+  });
+}
