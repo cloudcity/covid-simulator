@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "ndarray": "./ndarray.js",
+    "nouislider": "./nouislider.js",
+    "odex": "./odex.js",
+    "svelte": "./svelte.js",
+    "svelte/internal": "./svelte/internal.js",
+    "svelte/store": "./svelte/store.js",
+    "svelte/transition": "./svelte/transition.js",
+    "vega-embed": "./vega-embed.js",
+    "wnumb": "./wnumb.js"
+  }
+}
